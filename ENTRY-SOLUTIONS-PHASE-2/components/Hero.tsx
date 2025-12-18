@@ -6,20 +6,24 @@ export default function Hero() {
   const [step, setStep] = useState<1 | 2>(1);
 
   return (
-    <section className="relative bg-gray-800 text-white overflow-hidden">
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/50" />
+    <section
+      className="relative text-white overflow-hidden bg-cover bg-center"
+      style={{ backgroundImage: "url('/images/hero-job.jpg')" }}
+    >
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-black/60" />
 
       <div className="relative container py-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         
-        {/* LEFT: VALUE PROP */}
+        {/* LEFT: VALUE PROPOSITION */}
         <div>
-          <p className="uppercase tracking-widest text-sm text-white/70 mb-4">
+          <p className="uppercase tracking-widest text-sm text-white/80 mb-4">
             Professional Door Installation
           </p>
 
           <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
-            Door Installations Done Right<br />the First Time
+            Door Installations Done Right<br />
+            the First Time
           </h1>
 
           <p className="text-lg text-white/90 max-w-xl mb-8">
@@ -35,7 +39,7 @@ export default function Hero() {
           </ul>
         </div>
 
-        {/* RIGHT: QUIZ CARD */}
+        {/* RIGHT: QUIZ / QUOTE CARD */}
         <div className="bg-white text-gray-900 rounded-xl shadow-xl p-8 transition hover:shadow-2xl">
           <h2 className="text-2xl font-bold mb-1">
             Get a Free Quote
