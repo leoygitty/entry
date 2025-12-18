@@ -103,13 +103,6 @@ export default function Hero() {
               Continue →
             </button>
 
-            {/* Trust microcopy */}
-            <p className="text-xs text-gray-500 text-center leading-snug">
-              No obligation. Your information is used only to provide your quote.
-            </p>
-          </form>
-        </div>
-      </div>
-    </section>
-  );
-}
+            {/* Trust badges */}
+            <div className="border-t pt-4 mt-4">
+              <div className="grid gri
