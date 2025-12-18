@@ -5,7 +5,7 @@ export default function ServicesPage() {
     <main>
       {/* PAGE HEADER */}
       <section className="bg-background py-20">
-        <div className="container text-center max-w-3xl">
+        <div className="container max-w-3xl text-center">
           <h1 className="text-4xl font-bold text-primary mb-6">
             Door Sales & Professional Installation Services
           </h1>
@@ -24,12 +24,13 @@ export default function ServicesPage() {
               Door Sales
             </h2>
             <p className="text-secondary mb-6">
-              We offer a wide selection of durable, stylish, and energy-efficient
-              doors sourced from trusted manufacturers. Whether you’re replacing
-              an existing door or upgrading your space, we help you select the
-              right solution for performance and appearance.
+              We offer a wide selection of durable, stylish, and
+              energy-efficient doors from trusted manufacturers. Whether you’re
+              replacing an existing door or upgrading your space, we help you
+              choose the right solution for performance and appearance.
             </p>
-            <ul className="space-y-3">
+
+            <ul className="space-y-3 text-secondary">
               <li>✔ Exterior entry doors</li>
               <li>✔ Interior doors</li>
               <li>✔ Security doors</li>
@@ -37,7 +38,7 @@ export default function ServicesPage() {
             </ul>
           </div>
 
-          <div className="bg-background rounded-xl p-8">
+          <div className="bg-background rounded-xl p-8 shadow-sm">
             <p className="font-semibold mb-2">Ideal for:</p>
             <p className="text-secondary">
               Homeowners, property managers, business owners, and contractors
@@ -77,7 +78,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* CUSTOM DOOR SERVICES */}
+      {/* CUSTOM DOOR SERVICES + VIDEO */}
       <section className="py-20 bg-white">
         <div className="container grid md:grid-cols-2 gap-12 items-center">
           <div>
@@ -85,28 +86,30 @@ export default function ServicesPage() {
               Custom Door Services
             </h2>
             <p className="text-secondary mb-6">
-              For unique spaces and design-driven projects, we offer custom door
-              solutions tailored to your exact needs. From sizing to materials
-              and finishes, we work closely with you to deliver a one-of-a-kind
-              result.
+              For unique spaces and design-focused projects, we provide custom
+              door solutions tailored to your exact needs. From sizing and
+              materials to finishes and fit, we deliver one-of-a-kind results
+              for both residential and commercial clients.
             </p>
-            <ul className="space-y-3">
-              <li>✔ Custom sizing & fit</li>
-              <li>✔ Specialty materials</li>
-              <li>✔ Design-focused installations</li>
+
+            <ul className="space-y-3 text-secondary">
+              <li>✔ Custom sizing & precision fit</li>
+              <li>✔ Specialty materials & finishes</li>
+              <li>✔ Design-driven installations</li>
               <li>✔ Residential & commercial projects</li>
             </ul>
           </div>
 
           {/* VIDEO CLIP */}
-          <div className="rounded-xl overflow-hidden shadow-lg">
+          <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-lg bg-black">
             <video
-              src="/videos/custom-door.mp4"
+              src="/custom-door.mp4"
               autoPlay
               loop
               muted
               playsInline
-              className="w-full h-full object-cover"
+              preload="metadata"
+              className="absolute inset-0 w-full h-full object-cover"
             />
           </div>
         </div>
