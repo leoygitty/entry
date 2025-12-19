@@ -1,70 +1,84 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 export default function Header() {
   const pathname = usePathname();
   const [hidden, setHidden] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [lastScroll, setLastScroll] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [lastY, setLastY] = useState(0);
 
-  // Hide on scroll down, show on scroll up
   useEffect(() => {
-    const handleScroll = () => {
-      const current = window.scrollY;
-      setHidden(current > lastScroll && current > 80);
-      setLastScroll(current);
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 8);
+      setHidden(y > lastY && y > 80);
+      setLastY(y);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScroll]);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [lastY]);
 
-  const navLink = (href: string, label: string) => (
+  const navItem = (href: string, label: string) => (
     <Link
       href={href}
-      className={`relative pb-1 transition ${
+      className={`relative px-1 transition-colors ${
         pathname === href
-          ? "text-blue-900 after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-full after:bg-blue-900"
+          ? "text-blue-900 font-semibold"
           : "text-gray-700 hover:text-blue-900"
       }`}
     >
       {label}
+      {pathname === href && (
+        <span className="absolute -bottom-1 left-0 right-0 h-[2px] bg-blue-900 rounded-full" />
+      )}
     </Link>
   );
 
   return (
     <>
-      {/* HEADER BAR */}
+      {/* HEADER */}
       <header
-        className={`fixed top-0 inset-x-0 z-50 bg-white/95 backdrop-blur border-b transition-transform duration-300 ${
-          hidden ? "-translate-y-full" : "translate-y-0"
-        }`}
+        className={`
+          fixed top-0 inset-x-0 z-50
+          transition-all duration-300
+          ${hidden ? "-translate-y-full" : "translate-y-0"}
+          ${scrolled ? "backdrop-blur-md shadow-md" : ""}
+          bg-white/95
+        `}
       >
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 h-16">
+        <div className="max-w-7xl mx-auto px-4 h-[64px] flex items-center justify-between">
           
-          {/* LOGO — FLUSH LEFT */}
+          {/* LOGO — pinned left */}
           <Link href="/" className="flex items-center">
-            <Image
-              src="/logo.png"
-              alt="Entry Solutions Door Installation"
-              width={190}
-              height={52}
-              priority
-              className="object-contain"
-            />
+            <div
+              className={`
+                transition-transform duration-300
+                ${scrolled ? "scale-[0.92]" : "scale-100"}
+              `}
+            >
+              <Image
+                src="/logo.png"
+                alt="Entry Solutions Door Installation"
+                width={160}
+                height={48}
+                priority
+              />
+            </div>
           </Link>
 
           {/* DESKTOP NAV */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-            {navLink("/services", "Services")}
-            {navLink("/about", "Why Choose Us")}
+          <nav className="hidden md:flex items-center gap-8 text-sm">
+            {navItem("/services", "Services")}
+            {navItem("/about", "Why Choose Us")}
             <Link
               href="/contact"
-              className="ml-4 bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700 transition"
+              className="ml-2 bg-red-600 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-red-700 transition"
             >
               Call Now
             </Link>
@@ -72,7 +86,7 @@ export default function Header() {
 
           {/* MOBILE MENU BUTTON */}
           <button
-            onClick={() => setMenuOpen(true)}
+            onClick={() => setMobileOpen(true)}
             className="md:hidden text-gray-800 text-2xl"
             aria-label="Open Menu"
           >
@@ -81,35 +95,35 @@ export default function Header() {
         </div>
       </header>
 
-      {/* MOBILE MENU OVERLAY */}
-      {menuOpen && (
-        <div className="fixed inset-0 z-50">
-          {/* Backdrop */}
+      {/* MOBILE OVERLAY */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          {/* BACKDROP */}
           <div
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-            onClick={() => setMenuOpen(false)}
+            onClick={() => setMobileOpen(false)}
           />
 
-          {/* Menu Panel */}
-          <div className="absolute top-0 right-0 w-72 h-full bg-white shadow-2xl p-6 animate-slide-in">
+          {/* PANEL */}
+          <div className="absolute right-0 top-0 h-full w-[80%] max-w-sm bg-white animate-slide-in shadow-2xl p-6 flex flex-col gap-6">
             <button
-              onClick={() => setMenuOpen(false)}
-              className="text-gray-500 text-xl mb-8"
+              onClick={() => setMobileOpen(false)}
+              className="self-end text-2xl text-gray-700"
             >
               ✕
             </button>
 
-            <nav className="flex flex-col gap-6 text-lg font-medium">
-              <Link href="/services" onClick={() => setMenuOpen(false)}>
+            <nav className="flex flex-col gap-5 text-lg">
+              <Link href="/services" onClick={() => setMobileOpen(false)}>
                 Services
               </Link>
-              <Link href="/about" onClick={() => setMenuOpen(false)}>
+              <Link href="/about" onClick={() => setMobileOpen(false)}>
                 Why Choose Us
               </Link>
               <Link
                 href="/contact"
-                onClick={() => setMenuOpen(false)}
-                className="mt-4 bg-red-600 text-white px-4 py-3 rounded-lg text-center"
+                onClick={() => setMobileOpen(false)}
+                className="mt-4 bg-red-600 text-white py-3 rounded-lg text-center font-semibold"
               >
                 Call Now
               </Link>
@@ -117,6 +131,9 @@ export default function Header() {
           </div>
         </div>
       )}
+
+      {/* HEADER SPACER */}
+      <div className="h-[64px]" />
     </>
   );
 }
