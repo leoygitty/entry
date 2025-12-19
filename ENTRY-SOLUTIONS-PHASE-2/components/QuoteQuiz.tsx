@@ -6,6 +6,7 @@ const steps = ["Project Type", "Service", "Contact"];
 
 export default function QuoteQuiz() {
   const [step, setStep] = useState(0);
+  const [completed, setCompleted] = useState(false);
   const [form, setForm] = useState({
     projectType: "",
     service: "",
@@ -16,6 +17,39 @@ export default function QuoteQuiz() {
 
   const next = () => setStep((s) => Math.min(s + 1, steps.length - 1));
   const back = () => setStep((s) => Math.max(s - 1, 0));
+
+  /* =========================
+     COMPLETION STATE
+  ========================== */
+  if (completed) {
+    return (
+      <div className="relative bg-white rounded-2xl p-8 shadow-xl w-full max-w-md text-center overflow-hidden animate-fade-in">
+        
+        {/* CONFETTI */}
+        <div className="absolute inset-0 pointer-events-none">
+          {[...Array(40)].map((_, i) => (
+            <span
+              key={i}
+              className="absolute w-2 h-2 rounded-full bg-red-500 animate-confetti"
+              style={{
+                left: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random()}s`,
+                backgroundColor: i % 2 ? "#1e40af" : "#dc2626",
+              }}
+            />
+          ))}
+        </div>
+
+        <h3 className="text-2xl font-bold text-primary mb-3">
+          🎉 Thank you!
+        </h3>
+
+        <p className="text-gray-700">
+          A team member will reach out to you shortly!
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white/95 backdrop-blur rounded-2xl p-6 shadow-xl w-full max-w-md">
@@ -41,9 +75,8 @@ export default function QuoteQuiz() {
             style={{ width: `${((step + 1) / steps.length) * 100}%` }}
           />
 
-          {/* moving dot */}
           <div
-            className="absolute top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-white border-2 border-red-500 shadow-md transition-all duration-700"
+            className="absolute top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-white border-2 border-blue-600 shadow-md transition-all duration-700"
             style={{ left: `${((step + 1) / steps.length) * 100}%` }}
           />
         </div>
@@ -64,20 +97,32 @@ export default function QuoteQuiz() {
             { label: "Residential", emoji: "🏡" },
             { label: "Commercial", emoji: "🏢" },
             { label: "Custom", emoji: "✨" },
-          ].map((opt) => (
-            <button
-              key={opt.label}
-              onClick={() => {
-                setForm({ ...form, projectType: opt.label });
-                next();
-              }}
-              className="w-full border rounded-lg py-3 flex items-center justify-center gap-2
-                hover:bg-primary hover:text-white transition font-medium"
-            >
-              <span className="text-xl">{opt.emoji}</span>
-              {opt.label}
-            </button>
-          ))}
+          ].map((opt) => {
+            const selected = form.projectType === opt.label;
+
+            return (
+              <button
+                key={opt.label}
+                onClick={() => {
+                  setForm({ ...form, projectType: opt.label });
+                  next();
+                }}
+                className={`w-full border rounded-lg py-3 flex items-center justify-between px-4
+                  font-medium text-black transition
+                  ${selected ? "ring-2 ring-blue-600 border-blue-600" : "hover:bg-gray-100"}
+                `}
+              >
+                <span className="flex items-center gap-2">
+                  <span className="text-xl">{opt.emoji}</span>
+                  {opt.label}
+                </span>
+
+                {selected && (
+                  <span className="text-blue-600 animate-scale-in">✔</span>
+                )}
+              </button>
+            );
+          })}
         </div>
       )}
 
@@ -92,20 +137,32 @@ export default function QuoteQuiz() {
             { label: "Door Installation", emoji: "🚪" },
             { label: "Door Replacement", emoji: "♻️" },
             { label: "Custom Door Project", emoji: "🛠️" },
-          ].map((opt) => (
-            <button
-              key={opt.label}
-              onClick={() => {
-                setForm({ ...form, service: opt.label });
-                next();
-              }}
-              className="w-full border rounded-lg py-3 flex items-center justify-center gap-2
-                hover:bg-primary hover:text-white transition font-medium"
-            >
-              <span className="text-xl">{opt.emoji}</span>
-              {opt.label}
-            </button>
-          ))}
+          ].map((opt) => {
+            const selected = form.service === opt.label;
+
+            return (
+              <button
+                key={opt.label}
+                onClick={() => {
+                  setForm({ ...form, service: opt.label });
+                  next();
+                }}
+                className={`w-full border rounded-lg py-3 flex items-center justify-between px-4
+                  font-medium text-black transition
+                  ${selected ? "ring-2 ring-blue-600 border-blue-600" : "hover:bg-gray-100"}
+                `}
+              >
+                <span className="flex items-center gap-2">
+                  <span className="text-xl">{opt.emoji}</span>
+                  {opt.label}
+                </span>
+
+                {selected && (
+                  <span className="text-blue-600 animate-scale-in">✔</span>
+                )}
+              </button>
+            );
+          })}
 
           <button onClick={back} className="text-sm text-gray-400 mt-2">
             ← Back
@@ -120,32 +177,23 @@ export default function QuoteQuiz() {
             📞 Where should we send your quote?
           </h3>
 
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2">👤</span>
-            <input
-              placeholder="Full Name"
-              className="w-full border rounded-lg p-3 pl-10 focus:outline-none focus:ring-2 focus:ring-primary"
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-            />
-          </div>
+          <input
+            placeholder="Full Name"
+            className="w-full border rounded-lg p-3 text-black focus:ring-2 focus:ring-blue-600"
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+          />
 
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2">📞</span>
-            <input
-              placeholder="Phone Number"
-              className="w-full border rounded-lg p-3 pl-10 focus:outline-none focus:ring-2 focus:ring-primary"
-              onChange={(e) => setForm({ ...form, phone: e.target.value })}
-            />
-          </div>
+          <input
+            placeholder="Phone Number"
+            className="w-full border rounded-lg p-3 text-black focus:ring-2 focus:ring-blue-600"
+            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+          />
 
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2">✉️</span>
-            <input
-              placeholder="Email Address"
-              className="w-full border rounded-lg p-3 pl-10 focus:outline-none focus:ring-2 focus:ring-primary"
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-            />
-          </div>
+          <input
+            placeholder="Email Address"
+            className="w-full border rounded-lg p-3 text-black focus:ring-2 focus:ring-blue-600"
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+          />
 
           <button
             className="w-full bg-gradient-to-r from-red-600 to-blue-700
@@ -153,7 +201,7 @@ export default function QuoteQuiz() {
               hover:opacity-90 transition"
             onClick={() => {
               console.log("QUIZ DATA:", form);
-              alert("Quote request captured (backend coming next)");
+              setCompleted(true);
             }}
           >
             Get My Free Quote →
