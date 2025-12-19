@@ -59,9 +59,11 @@ export default function Home() {
       <section className="container mx-auto py-20 px-6">
         <div className="grid md:grid-cols-2 gap-12 items-center">
 
-          {/* SECOND VIDEO — FIXED */}
-          <div className="rounded-2xl overflow-hidden shadow-xl border bg-black max-w-sm mx-auto">
-  <div className="relative aspect-[9/16]">
+      
+         {/* SECOND VIDEO */}
+<div className="rounded-2xl overflow-hidden shadow-xl border bg-black max-w-md mx-auto w-full">
+  <div className="relative w-full" style={{ paddingTop: "177.78%" }}>
+    {/* 9:16 ratio = 16/9 = 1.777... => 177.78% */}
     <video
       controls
       muted
