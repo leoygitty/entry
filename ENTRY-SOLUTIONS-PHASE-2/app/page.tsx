@@ -68,15 +68,16 @@ export default function Home() {
 
           {/* FIRST VIDEO */}
           <div className="rounded-2xl overflow-hidden shadow-xl border bg-black">
-            <video
-              controls
-              muted
-              playsInline
-              preload="metadata"
-              className="w-full h-auto"
-            >
-              <source src="/custom-door.mp4" type="video/mp4" />
-            </video>
+           <video
+  controls
+  muted
+  playsInline
+  preload="none"
+  poster="/custom-door-poster.jpg"
+  className="w-full h-auto rounded-2xl"
+>
+  <source src="/custom-door.mp4" type="video/mp4" />
+</video>
           </div>
         </div>
       </section>
@@ -89,14 +90,15 @@ export default function Home() {
           <div className="rounded-2xl overflow-hidden shadow-xl border bg-black max-w-md mx-auto w-full">
             <div className="relative w-full" style={{ paddingTop: "177.78%" }}>
               <video
-                controls
-                muted
-                playsInline
-                preload="metadata"
-                className="absolute inset-0 w-full h-full object-cover"
-              >
-                <source src="/custom-door2.mp4" type="video/mp4" />
-              </video>
+  controls
+  muted
+  playsInline
+  preload="none"
+  poster="/custom-door2-poster.jpg"
+  className="absolute inset-0 w-full h-full object-cover"
+>
+  <source src="/custom-door2.mp4" type="video/mp4" />
+</video>
             </div>
           </div>
 
