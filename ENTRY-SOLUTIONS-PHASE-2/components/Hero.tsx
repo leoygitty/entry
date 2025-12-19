@@ -25,20 +25,35 @@ export default function Hero() {
             Professional Door Installation
           </p>
 
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
+          <h1
+            className="
+              text-[2.25rem] leading-[1.1]
+              sm:text-4xl
+              md:text-5xl
+              font-bold mb-4
+            "
+          >
             Door Installations Done Right
             <br />
             the First Time
           </h1>
 
-          <p className="text-lg text-white/85 max-w-xl mb-8">
+          <p
+            className="
+              text-base
+              sm:text-lg
+              text-white/85
+              max-w-xl
+              mb-6
+            "
+          >
             High-quality door installations that improve security,
             energy efficiency, and curb appeal — installed with
             precision and care.
           </p>
 
           {/* Explicit white lock (desktop + mobile) */}
-          <ul className="space-y-3 text-white">
+          <ul className="space-y-2 text-white/90 text-sm sm:text-base">
             <li className="flex items-start gap-2">
               <span className="text-white">✔</span>
               <span>Exterior & Interior Doors</span>
@@ -54,8 +69,8 @@ export default function Hero() {
           </ul>
         </div>
 
-        {/* RIGHT: QUIZ CARD */}
-        <div className="animate-fade-in">
+        {/* RIGHT: QUIZ CARD (micro delay for visual flow) */}
+        <div className="animate-fade-in [animation-delay:80ms]">
           <QuoteQuiz />
         </div>
       </div>
