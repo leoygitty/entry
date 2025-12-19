@@ -148,12 +148,12 @@ export default function Home() {
         "
       >
         {[
-          "/gallery/door-1.JPG",
+          "/gallery/door-1.jpg",
           "/gallery/door-2.jpg",
           "/gallery/door-3.jpg",
-          "/gallery/door-4.JPG",
-          "/gallery/door-5.JPG",
-          "/gallery/door-6.JPG",
+          "/gallery/door-4.jpg",
+          "/gallery/door-5.jpg",
+          "/gallery/door-6.jpg",
         ].map((src, i) => (
           <div
             key={i}
