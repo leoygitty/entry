@@ -38,18 +38,21 @@ export default function Hero() {
             precision and care.
           </p>
 
-         <ul className="space-y-3">
-  {[
-    "Exterior & Interior Doors",
-    "Security & Custom Fit Options",
-    "Clean, Professional Installation",
-  ].map((text) => (
-    <li key={text} className="flex items-start gap-2 text-white">
-      <span className="text-white">✔</span>
-      <span className="text-white/90">{text}</span>
-    </li>
-  ))}
-</ul>
+         <ul className="space-y-3 text-white">
+  <li className="flex items-start gap-2">
+    <span className="text-white">✔</span>
+    <span>Exterior & Interior Doors</span>
+  </li>
+  <li className="flex items-start gap-2">
+    <span className="text-white">✔</span>
+    <span>Security & Custom Fit Options</span>
+  </li>
+  <li className="flex items-start gap-2">
+    <span className="text-white">✔</span>
+    <span>Clean, Professional Installation</span>
+  </li>
+</ul>       
+        
         </div>
 
         {/* RIGHT: QUIZ CARD */}
