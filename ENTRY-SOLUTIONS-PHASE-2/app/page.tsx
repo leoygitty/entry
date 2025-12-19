@@ -54,6 +54,43 @@ export default function Home() {
         </div>
       </section>
 
+      {/* SECOND CUSTOM DOOR VIDEO + TRUST COPY */}
+<section className="container mx-auto py-20">
+  <div className="grid md:grid-cols-2 gap-12 items-center">
+
+    {/* VIDEO */}
+    <div className="rounded-xl overflow-hidden shadow-xl">
+      <video
+        src="/custom-door-2.mp4"
+        controls
+        playsInline
+        className="w-full h-auto rounded-xl"
+      />
+    </div>
+
+    {/* TRUST TEXT */}
+    <div>
+      <h3 className="text-2xl font-bold text-primary mb-4">
+        Real Custom Hidden Door Project
+      </h3>
+
+      <p className="text-gray-600 text-lg leading-relaxed">
+        The videos shown on this page are from a real custom installation
+        completed by our team. This project featured a hidden door designed
+        to blend seamlessly into the surrounding space while maintaining
+        full functionality and security.
+      </p>
+
+      <p className="text-gray-600 text-lg leading-relaxed mt-4">
+        Every custom door we install is carefully measured, fitted, and
+        installed with precision — ensuring smooth operation, a clean
+        finish, and long-term durability.
+      </p>
+    </div>
+
+  </div>
+</section>
+
       {/* TESTIMONIALS */}
       <Testimonials />
 
