@@ -60,17 +60,19 @@ export default function Home() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
 
           {/* SECOND VIDEO — FIXED */}
-          <div className="rounded-2xl overflow-hidden shadow-xl border bg-black">
-            <video
-              controls
-              muted
-              playsInline
-              preload="metadata"
-              className="w-full h-auto"
-            >
-              <source src="/custom-door2.mp4" type="video/mp4" />
-            </video>
-          </div>
+          <div className="rounded-2xl overflow-hidden shadow-xl border bg-black max-w-sm mx-auto">
+  <div className="relative aspect-[9/16]">
+    <video
+      controls
+      muted
+      playsInline
+      preload="metadata"
+      className="absolute inset-0 w-full h-full object-cover"
+    >
+      <source src="/custom-door2.mp4" type="video/mp4" />
+    </video>
+  </div>
+</div>
 
           {/* TRUST TEXT */}
           <div>
