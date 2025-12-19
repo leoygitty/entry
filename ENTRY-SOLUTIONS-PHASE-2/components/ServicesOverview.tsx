@@ -3,16 +3,16 @@
 export default function ServicesOverview() {
   const services = [
     {
-      title: "Residential Door Installation",
-      desc: "Professional installation for exterior and interior residential doors.",
+      title: "Residential Door Installations",
+      desc: "Professional installation of exterior and interior doors for homeowners. We ensure proper fit, secure sealing, smooth operation, and a clean finish that improves both curb appeal and energy efficiency.",
     },
     {
-      title: "Commercial Door Services",
-      desc: "Durable, code-compliant door solutions for commercial properties.",
+      title: "Commercial Door Installations",
+      desc: "Reliable door installation services for offices, retail spaces, warehouses, and other commercial properties. We install durable, code-compliant doors designed for security, heavy use, and long-term performance.",
     },
     {
-      title: "Custom Door Projects",
-      desc: "One-of-a-kind doors designed and installed to fit unique spaces.",
+      title: "Custom Door Services",
+      desc: "Custom-fit doors designed for unique openings, specialty materials, or specific design requirements. We handle precise measurements, custom solutions, and expert installation for both residential and commercial projects.",
     },
   ];
 
@@ -29,10 +29,10 @@ export default function ServicesOverview() {
               key={index}
               className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition"
             >
-              <h3 className="text-xl font-semibold mb-3">
+              <h3 className="text-xl font-semibold mb-4">
                 {service.title}
               </h3>
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-600 text-sm leading-relaxed">
                 {service.desc}
               </p>
             </div>
