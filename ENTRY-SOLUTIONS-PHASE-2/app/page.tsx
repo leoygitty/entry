@@ -5,7 +5,6 @@ import Hero from "@/components/Hero";
 import TrustIndicators from "@/components/TrustIndicators";
 import ServicesOverview from "@/components/ServicesOverview";
 import Testimonials from "@/components/Testimonials";
-import ConversionCTA from "@/components/ConversionCTA";
 import VideoWithOverlay from "@/components/VideoWithOverlay";
 
 export default function Home() {
