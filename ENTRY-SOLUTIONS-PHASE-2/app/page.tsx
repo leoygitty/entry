@@ -6,6 +6,7 @@ import TrustIndicators from "@/components/TrustIndicators";
 import ServicesOverview from "@/components/ServicesOverview";
 import Testimonials from "@/components/Testimonials";
 import ConversionCTA from "@/components/ConversionCTA";
+import VideoWithOverlay from "@/components/VideoWithOverlay";
 
 export default function Home() {
   const [step] = useState(0);
@@ -66,19 +67,12 @@ export default function Home() {
             </ul>
           </div>
 
-          {/* FIRST VIDEO */}
-          <div className="rounded-2xl overflow-hidden shadow-xl border bg-black">
-           <video
-  controls
-  muted
-  playsInline
-  preload="none"
-  poster="/custom-door-poster.jpg"
-  className="w-full h-auto rounded-2xl"
->
-  <source src="/custom-door.mp4" type="video/mp4" />
-</video>
-          </div>
+          {/* FIRST VIDEO — APPLE STYLE */}
+          <VideoWithOverlay
+            src="/custom-door.mp4"
+            poster="/custom-door-poster.jpg"
+          />
+
         </div>
       </section>
 
@@ -87,20 +81,11 @@ export default function Home() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
 
           {/* SECOND VIDEO (PORTRAIT SAFE) */}
-          <div className="rounded-2xl overflow-hidden shadow-xl border bg-black max-w-md mx-auto w-full">
-            <div className="relative w-full" style={{ paddingTop: "177.78%" }}>
-              <video
-  controls
-  muted
-  playsInline
-  preload="none"
-  poster="/custom-door2-poster.jpg"
-  className="absolute inset-0 w-full h-full object-cover"
->
-  <source src="/custom-door2.mp4" type="video/mp4" />
-</video>
-            </div>
-          </div>
+          <VideoWithOverlay
+            src="/custom-door2.mp4"
+            poster="/custom-door2-poster.jpg"
+            portrait
+          />
 
           {/* TRUST TEXT */}
           <div>
@@ -125,71 +110,69 @@ export default function Home() {
       </section>
 
       {/* GALLERY SECTION */}
-<section className="mt-32 py-24 bg-white overflow-hidden">
-  <div className="max-w-7xl mx-auto px-6">
+      <section className="mt-32 py-24 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6">
 
-    <h2 className="text-4xl font-bold text-primary mb-4 text-center">
-      Recent Door & Custom Trim Installations
-    </h2>
+          <h2 className="text-4xl font-bold text-primary mb-4 text-center">
+            Recent Door & Custom Trim Installations
+          </h2>
 
-    <p className="text-gray-600 text-lg max-w-2xl mx-auto text-center mb-12">
-      A selection of real projects completed by our team — precision craftsmanship,
-      premium materials, and clean finishes.
-    </p>
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto text-center mb-12">
+            A selection of real projects completed by our team — precision craftsmanship,
+            premium materials, and clean finishes.
+          </p>
 
-    {/* SCROLL WRAPPER */}
-    <div className="relative">
-      <div
-        className="
-          flex gap-8
-          overflow-x-auto
-          scroll-smooth
-          snap-x snap-mandatory
-          no-scrollbar
-          px-4
-        "
-      >
-        {[
-          "/gallery/door-1.jpg",
-          "/gallery/door-2.jpg",
-          "/gallery/door-3.jpg",
-          "/gallery/door-4.jpg",
-          "/gallery/door-5.jpg",
-          "/gallery/door-6.jpg",
-        ].map((src, i) => (
-          <div
-            key={i}
-            className="
-              min-w-[300px] md:min-w-[380px]
-              snap-center
-              rounded-2xl
-              overflow-hidden
-              shadow-xl
-              bg-black
-              transition-transform duration-500
-              hover:scale-[1.03]
-            "
-          >
-            <img
-              src={src}
-              alt={`Door installation ${i + 1}`}
-              className="w-full h-[420px] object-cover"
-            />
+          <div className="relative">
+            <div
+              className="
+                flex gap-8
+                overflow-x-auto
+                scroll-smooth
+                snap-x snap-mandatory
+                no-scrollbar
+                px-4
+              "
+            >
+              {[
+                "/gallery/door-1.jpg",
+                "/gallery/door-2.jpg",
+                "/gallery/door-3.jpg",
+                "/gallery/door-4.jpg",
+                "/gallery/door-5.jpg",
+                "/gallery/door-6.jpg",
+              ].map((src, i) => (
+                <div
+                  key={i}
+                  className="
+                    min-w-[300px] md:min-w-[380px]
+                    snap-center
+                    rounded-2xl
+                    overflow-hidden
+                    shadow-xl
+                    bg-black
+                    transition-transform duration-500
+                    hover:scale-[1.03]
+                  "
+                >
+                  <img
+                    src={src}
+                    alt={`Door installation ${i + 1}`}
+                    className="w-full h-[420px] object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="pointer-events-none absolute top-0 left-0 h-full w-24 bg-gradient-to-r from-white to-transparent" />
+            <div className="pointer-events-none absolute top-0 right-0 h-full w-24 bg-gradient-to-l from-white to-transparent" />
           </div>
-        ))}
-      </div>
 
-      {/* GRADIENT EDGES (APPLE TOUCH) */}
-      <div className="pointer-events-none absolute top-0 left-0 h-full w-24 bg-gradient-to-r from-white to-transparent" />
-      <div className="pointer-events-none absolute top-0 right-0 h-full w-24 bg-gradient-to-l from-white to-transparent" />
-    </div>
+          <p className="mt-6 text-sm text-gray-400 text-center">
+            ← Swipe to explore more projects →
+          </p>
 
-    <p className="mt-6 text-sm text-gray-400 text-center">
-      ← Swipe to explore more projects →
-    </p>
-
-  </div>
-</section>
+        </div>
+      </section>
 
       {/* TESTIMONIALS */}
       <Testimonials />
