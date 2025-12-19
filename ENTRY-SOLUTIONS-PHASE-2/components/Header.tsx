@@ -20,9 +20,9 @@ export default function Header() {
       <header className="fixed top-0 inset-x-0 z-50 bg-white border-b">
         <div className="container flex items-center justify-between h-16">
 
-          {/* LOGO */}
+          {/* LOGO — UPDATED SIZE */}
           <Link href="/" className="flex items-center h-full">
-            <div className="relative h-10 w-[150px]">
+            <div className="relative h-12 w-[190px] flex items-center">
               <Image
                 src="/logo.png"
                 alt="Entry Solutions Door Installation"
@@ -42,9 +42,9 @@ export default function Header() {
               Why Choose Us
             </Link>
 
-            {/* UPDATED CTA — scrolls to quote */}
+            {/* HEADER CTA → QUOTE */}
             <a
-              href="/contact"
+              href="#quote"
               className="bg-red-600 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-red-700 transition"
             >
               Call Now
@@ -82,9 +82,8 @@ export default function Header() {
               Why Choose Us
             </Link>
 
-            {/* UPDATED MOBILE CTA */}
             <a
-              href="/contact"
+              href="#quote"
               onClick={() => setMenuOpen(false)}
               className="mt-auto bg-red-600 text-white text-center py-3 rounded-lg font-semibold"
             >
@@ -94,7 +93,7 @@ export default function Header() {
         </div>
       )}
 
-      {/* Spacer */}
+      {/* HEADER SPACER */}
       <div className="h-16" />
     </>
   );
