@@ -1,24 +1,23 @@
 "use client";
 
-export default function MobileCallBar() {
+export default function MobileCallButton() {
   return (
-    <div className="fixed bottom-0 inset-x-0 z-50 md:hidden">
-      <a
-        href="tel:2679452247"
-        aria-label="Call Entry Solutions LLC"
-        className="
-          flex items-center justify-center gap-3
-          py-4 px-6
-          bg-gradient-to-r from-red-600 to-blue-700
-          text-white font-bold text-lg
-          shadow-2xl
-          animate-pulse
-          active:scale-[0.98]
-          transition
-        "
-      >
-        📞 Call Now — (267) 945-2247
-      </a>
-    </div>
+    <a
+      href="tel:2679452247"
+      aria-label="Call Entry Solutions LLC"
+      className="
+        fixed bottom-5 right-5 z-50 md:hidden
+        flex items-center justify-center
+        w-14 h-14
+        rounded-full
+        bg-red-600 text-white
+        shadow-xl
+        hover:bg-red-700 hover:scale-105
+        active:scale-95
+        transition-all duration-300
+      "
+    >
+      <span className="text-xl">📞</span>
+    </a>
   );
 }
