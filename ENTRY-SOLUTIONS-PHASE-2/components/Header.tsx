@@ -13,17 +13,25 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => {
-      const current = window.scrollY;
+  const onScroll = () => {
+    const current = window.scrollY;
 
-      setScrolled(current > 40);
-      setHidden(current > lastScroll && current > 120);
-      setLastScroll(current);
-    };
+    // Header background / blur
+    setScrolled(current > 40);
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [lastScroll]);
+    // 🔒 Lock header visible near top
+    if (current < 120) {
+      setHidden(false);
+    } else {
+      setHidden(current > lastScroll);
+    }
+
+    setLastScroll(current);
+  };
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  return () => window.removeEventListener("scroll", onScroll);
+}, [lastScroll]);
 
   return (
     <>
