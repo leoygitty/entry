@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { CheckCircle, ShieldCheck, Users, Star, MapPin, ArrowRight, Quote, Clock } from 'lucide-react';
+import { CheckCircle, ShieldCheck, Users, Star, MapPin, ArrowRight, Quote, Clock, type LucideIcon } from 'lucide-react';
 import { motion, AnimatePresence, Variant } from 'framer-motion';
 
-type IconComponent = React.ComponentType<{ size?: number; className?: string; }>;
-
 interface Differentiator {
-  icon: IconComponent;
+  icon: LucideIcon;
   title: string;
   desc: string;
   stat: string;
