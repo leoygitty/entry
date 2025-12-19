@@ -45,7 +45,7 @@ export default function Header() {
 
           {/* LOGO — FILLS BAR */}
           <Link href="/" className="flex items-center h-full">
-            <div className="relative h-[125%] w-[320px]">
+            <div className="relative h-[160%] w-[500px]">
               <Image
                 src="/logo.png"
                 alt="Entry Solutions Door Installation"
@@ -65,7 +65,7 @@ export default function Header() {
               Why Choose Us
             </Link>
             <a
-              href="#quote"
+              href="/contact"
               className="bg-red-600 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-red-700 transition"
             >
               Call Now
@@ -104,7 +104,7 @@ export default function Header() {
             </Link>
 
             <a
-              href="#quote"
+              href="/contact"
               onClick={() => setMenuOpen(false)}
               className="mt-auto bg-red-600 text-white text-center py-3 rounded-lg font-semibold"
             >
