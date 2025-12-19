@@ -67,7 +67,7 @@ export default function Header() {
               src="/logo.png"
               alt="Entry Solutions LLC"
               width={200}
-              height={50}
+              height={30}
               priority
               className="object-contain"
             />
