@@ -45,7 +45,7 @@ export default function Header() {
 
           {/* LOGO — FILLS BAR */}
           <Link href="/" className="flex items-center h-full">
-            <div className="relative h-[90%] w-[220px]">
+            <div className="relative h-[125%] w-[320px]">
               <Image
                 src="/logo.png"
                 alt="Entry Solutions Door Installation"
