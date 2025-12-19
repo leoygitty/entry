@@ -19,38 +19,63 @@ export default function QuoteQuiz() {
 
   return (
     <div className="bg-white/95 backdrop-blur rounded-2xl p-6 shadow-xl w-full max-w-md">
-      
-      {/* Progress */}
+
+      {/* HEADER */}
+      <h2 className="text-2xl font-bold text-primary mb-1">
+        Get a Free Quote
+      </h2>
+      <p className="text-sm text-gray-500 mb-4">
+        Step {step + 1} of {steps.length} — takes under 30 seconds
+      </p>
+
+      {/* FUN PROGRESS BAR */}
       <div className="mb-6">
-        <div className="flex justify-between text-xs text-gray-400 mb-2">
-          {steps.map((s, i) => (
-            <span key={i} className={i <= step ? "text-primary font-semibold" : ""}>
-              {s}
-            </span>
-          ))}
+        <div className="flex justify-between text-xs text-gray-400 mb-1">
+          <span>Start</span>
+          <span>Finish</span>
         </div>
-        <div className="h-1 bg-gray-200 rounded">
+
+        <div className="relative h-3 bg-gray-200 rounded-full overflow-hidden">
           <div
-            className="h-1 bg-primary rounded transition-all"
+            className="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-600 to-red-600 transition-all duration-700 ease-out"
             style={{ width: `${((step + 1) / steps.length) * 100}%` }}
           />
+
+          {/* moving dot */}
+          <div
+            className="absolute top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-white border-2 border-red-500 shadow-md transition-all duration-700"
+            style={{ left: `${((step + 1) / steps.length) * 100}%` }}
+          />
         </div>
+
+        <p className="mt-2 text-xs text-gray-500 text-center">
+          Almost there — people usually finish this
+        </p>
       </div>
 
       {/* STEP 1 */}
       {step === 0 && (
-        <div className="space-y-4">
-          <h3 className="text-xl font-bold text-primary">What type of project?</h3>
-          {["Residential", "Commercial", "Custom"].map((opt) => (
+        <div className="space-y-4 animate-fade-in">
+          <h3 className="text-lg font-semibold text-primary">
+            🏠 What type of project is this?
+          </h3>
+
+          {[
+            { label: "Residential", emoji: "🏡" },
+            { label: "Commercial", emoji: "🏢" },
+            { label: "Custom", emoji: "✨" },
+          ].map((opt) => (
             <button
-              key={opt}
+              key={opt.label}
               onClick={() => {
-                setForm({ ...form, projectType: opt });
+                setForm({ ...form, projectType: opt.label });
                 next();
               }}
-              className="w-full border rounded-lg py-3 hover:bg-primary hover:text-white transition"
+              className="w-full border rounded-lg py-3 flex items-center justify-center gap-2
+                hover:bg-primary hover:text-white transition font-medium"
             >
-              {opt}
+              <span className="text-xl">{opt.emoji}</span>
+              {opt.label}
             </button>
           ))}
         </div>
@@ -58,18 +83,27 @@ export default function QuoteQuiz() {
 
       {/* STEP 2 */}
       {step === 1 && (
-        <div className="space-y-4">
-          <h3 className="text-xl font-bold text-primary">What service do you need?</h3>
-          {["Door Installation", "Door Replacement", "Custom Door Project"].map((opt) => (
+        <div className="space-y-4 animate-fade-in">
+          <h3 className="text-lg font-semibold text-primary">
+            🔧 What service do you need?
+          </h3>
+
+          {[
+            { label: "Door Installation", emoji: "🚪" },
+            { label: "Door Replacement", emoji: "♻️" },
+            { label: "Custom Door Project", emoji: "🛠️" },
+          ].map((opt) => (
             <button
-              key={opt}
+              key={opt.label}
               onClick={() => {
-                setForm({ ...form, service: opt });
+                setForm({ ...form, service: opt.label });
                 next();
               }}
-              className="w-full border rounded-lg py-3 hover:bg-primary hover:text-white transition"
+              className="w-full border rounded-lg py-3 flex items-center justify-center gap-2
+                hover:bg-primary hover:text-white transition font-medium"
             >
-              {opt}
+              <span className="text-xl">{opt.emoji}</span>
+              {opt.label}
             </button>
           ))}
 
@@ -81,34 +115,53 @@ export default function QuoteQuiz() {
 
       {/* STEP 3 */}
       {step === 2 && (
-        <div className="space-y-4">
-          <h3 className="text-xl font-bold text-primary">Where should we send your quote?</h3>
+        <div className="space-y-4 animate-fade-in">
+          <h3 className="text-lg font-semibold text-primary">
+            📞 Where should we send your quote?
+          </h3>
 
-          <input
-            placeholder="Full Name"
-            className="w-full border rounded-lg p-3 focus:outline-primary"
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-          />
-          <input
-            placeholder="Phone Number"
-            className="w-full border rounded-lg p-3 focus:outline-primary"
-            onChange={(e) => setForm({ ...form, phone: e.target.value })}
-          />
-          <input
-            placeholder="Email Address"
-            className="w-full border rounded-lg p-3 focus:outline-primary"
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-          />
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2">👤</span>
+            <input
+              placeholder="Full Name"
+              className="w-full border rounded-lg p-3 pl-10 focus:outline-none focus:ring-2 focus:ring-primary"
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
+          </div>
+
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2">📞</span>
+            <input
+              placeholder="Phone Number"
+              className="w-full border rounded-lg p-3 pl-10 focus:outline-none focus:ring-2 focus:ring-primary"
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+            />
+          </div>
+
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2">✉️</span>
+            <input
+              placeholder="Email Address"
+              className="w-full border rounded-lg p-3 pl-10 focus:outline-none focus:ring-2 focus:ring-primary"
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+            />
+          </div>
 
           <button
-            className="w-full bg-primary text-white rounded-lg py-3 font-semibold hover:bg-blue-800 transition"
+            className="w-full bg-gradient-to-r from-red-600 to-blue-700
+              text-white rounded-lg py-3 font-bold text-lg
+              hover:opacity-90 transition"
             onClick={() => {
               console.log("QUIZ DATA:", form);
               alert("Quote request captured (backend coming next)");
             }}
           >
-            Get My Free Quote
+            Get My Free Quote →
           </button>
+
+          <p className="text-xs text-gray-500 text-center">
+            ✔ No spam • ✔ No sales pressure • ✔ Fast response
+          </p>
 
           <button onClick={back} className="text-sm text-gray-400">
             ← Back
