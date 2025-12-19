@@ -1,5 +1,4 @@
 import GalleryGrid from "@/components/GalleryGrid";
-import ConversionCTA from "@/components/ConversionCTA";
 
 export default function Gallery() {
   return (
