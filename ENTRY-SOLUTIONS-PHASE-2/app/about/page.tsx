@@ -20,8 +20,8 @@ export default function AboutPage() {
     {
       icon: CheckCircle,
       title: "Experienced Door Specialists",
-      desc: "Over 15 years of specialized door installation experience delivering precision and durability.",
-      stat: "15+ Years Experience",
+      desc: "Over 5 years of specialized door installation experience delivering precision and durability.",
+      stat: "5+ Years Experience",
     },
     {
       icon: ShieldCheck,
@@ -80,7 +80,7 @@ export default function AboutPage() {
   ];
 
   const stats = [
-    { value: "15+", label: "Years Experience" },
+    { value: "5+", label: "Years Experience" },
     { value: "1000+", label: "Projects Completed" },
     { value: "100%", label: "Client Satisfaction" },
     { value: "<24h", label: "Response Time" },
