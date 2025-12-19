@@ -3,79 +3,77 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
   const [hidden, setHidden] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [lastScroll, setLastScroll] = useState(0);
 
   // Hide on scroll down, show on scroll up
   useEffect(() => {
-    const onScroll = () => {
+    const handleScroll = () => {
       const current = window.scrollY;
-      if (current > lastScroll && current > 80) {
-        setHidden(true);
-      } else {
-        setHidden(false);
-      }
+      setHidden(current > lastScroll && current > 80);
       setLastScroll(current);
     };
 
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScroll]);
 
-  // Lock body scroll when menu open
-  useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [menuOpen]);
+  const navLink = (href: string, label: string) => (
+    <Link
+      href={href}
+      className={`relative pb-1 transition ${
+        pathname === href
+          ? "text-blue-900 after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-full after:bg-blue-900"
+          : "text-gray-700 hover:text-blue-900"
+      }`}
+    >
+      {label}
+    </Link>
+  );
 
   return (
     <>
-      {/* HEADER */}
+      {/* HEADER BAR */}
       <header
-        className={`fixed top-0 inset-x-0 z-50 bg-white border-b transition-transform duration-300 ${
+        className={`fixed top-0 inset-x-0 z-50 bg-white/95 backdrop-blur border-b transition-transform duration-300 ${
           hidden ? "-translate-y-full" : "translate-y-0"
         }`}
       >
-        <div className="container flex items-center justify-between h-14">
-
-          {/* LOGO — FILLS BAR */}
-          <Link href="/" className="flex items-center h-full">
-            <div className="relative h-[160%] w-[500px]">
-              <Image
-                src="/logo.png"
-                alt="Entry Solutions Door Installation"
-                fill
-                priority
-                className="object-contain"
-              />
-            </div>
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 h-16">
+          
+          {/* LOGO — FLUSH LEFT */}
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/logo.png"
+              alt="Entry Solutions Door Installation"
+              width={190}
+              height={52}
+              priority
+              className="object-contain"
+            />
           </Link>
 
           {/* DESKTOP NAV */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-800">
-            <Link href="/services" className="hover:text-blue-700 transition">
-              Services
-            </Link>
-            <Link href="/about" className="hover:text-blue-700 transition">
-              Why Choose Us
-            </Link>
-            <a
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
+            {navLink("/services", "Services")}
+            {navLink("/about", "Why Choose Us")}
+            <Link
               href="/contact"
-              className="bg-red-600 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-red-700 transition"
+              className="ml-4 bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700 transition"
             >
               Call Now
-            </a>
+            </Link>
           </nav>
 
           {/* MOBILE MENU BUTTON */}
           <button
             onClick={() => setMenuOpen(true)}
-            className="md:hidden text-2xl"
+            className="md:hidden text-gray-800 text-2xl"
             aria-label="Open Menu"
           >
             ☰
@@ -85,37 +83,40 @@ export default function Header() {
 
       {/* MOBILE MENU OVERLAY */}
       {menuOpen && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm">
-          <div className="absolute right-0 top-0 h-full w-72 bg-white shadow-xl p-6 flex flex-col gap-6">
+        <div className="fixed inset-0 z-50">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setMenuOpen(false)}
+          />
+
+          {/* Menu Panel */}
+          <div className="absolute top-0 right-0 w-72 h-full bg-white shadow-2xl p-6 animate-slide-in">
             <button
               onClick={() => setMenuOpen(false)}
-              className="self-end text-xl"
-              aria-label="Close Menu"
+              className="text-gray-500 text-xl mb-8"
             >
               ✕
             </button>
 
-            <Link href="/services" onClick={() => setMenuOpen(false)} className="text-lg font-medium">
-              Services
-            </Link>
-
-            <Link href="/about" onClick={() => setMenuOpen(false)} className="text-lg font-medium">
-              Why Choose Us
-            </Link>
-
-            <a
-              href="/contact"
-              onClick={() => setMenuOpen(false)}
-              className="mt-auto bg-red-600 text-white text-center py-3 rounded-lg font-semibold"
-            >
-              Get Free Quote
-            </a>
+            <nav className="flex flex-col gap-6 text-lg font-medium">
+              <Link href="/services" onClick={() => setMenuOpen(false)}>
+                Services
+              </Link>
+              <Link href="/about" onClick={() => setMenuOpen(false)}>
+                Why Choose Us
+              </Link>
+              <Link
+                href="/contact"
+                onClick={() => setMenuOpen(false)}
+                className="mt-4 bg-red-600 text-white px-4 py-3 rounded-lg text-center"
+              >
+                Call Now
+              </Link>
+            </nav>
           </div>
         </div>
       )}
-
-      {/* SPACER */}
-      <div className="h-14" />
     </>
   );
 }
