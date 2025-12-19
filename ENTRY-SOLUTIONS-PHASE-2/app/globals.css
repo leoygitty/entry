@@ -24,3 +24,12 @@ section {
 .animate-fade-in {
   animation: fade-in 0.35s ease-out both;
 }
+
+/* Hide scrollbar but keep scrolling */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
