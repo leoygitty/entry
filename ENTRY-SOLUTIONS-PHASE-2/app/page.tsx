@@ -207,8 +207,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FINAL CTA */}
-      <ConversionCTA />
     </main>
   );
 }
