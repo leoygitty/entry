@@ -1,138 +1,101 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 export default function Header() {
-  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [hidden, setHidden] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    let lastY = window.scrollY;
-
-    const onScroll = () => {
-      const currentY = window.scrollY;
-      setScrolled(currentY > 10);
-
-      if (currentY > lastY && currentY > 80) {
-        setHidden(true);
-      } else {
-        setHidden(false);
-      }
-
-      lastY = currentY;
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
     };
-
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const linkClass = (href: string) =>
-    `relative transition ${
-      pathname === href
-        ? "text-blue-900 after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-full after:bg-red-600"
-        : "text-gray-700 hover:text-blue-900"
-    }`;
+  }, [menuOpen]);
 
   return (
     <>
-      {/* HEADER */}
-      <header
-        className={`
-          fixed top-0 inset-x-0 z-50
-          bg-white/90 backdrop-blur
-          border-b border-black/5
-          transition-transform duration-300
-          ${hidden ? "-translate-y-full" : "translate-y-0"}
-        `}
-      >
-        <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-          
+      {/* HEADER BAR */}
+      <header className="fixed top-0 inset-x-0 z-50 bg-white border-b">
+        <div className="container flex items-center justify-between h-16">
+
           {/* LOGO */}
-          <Link href="/" className="flex items-center">
-            <Image
-              src="/logo.png"
-              alt="Entry Solutions Door Installation"
-              width={140}
-              height={44}
-              priority
-              className="object-contain"
-            />
+          <Link href="/" className="flex items-center h-full">
+            <div className="relative h-10 w-[150px]">
+              <Image
+                src="/logo.png"
+                alt="Entry Solutions Door Installation"
+                fill
+                priority
+                className="object-contain"
+              />
+            </div>
           </Link>
 
           {/* DESKTOP NAV */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-            <Link href="/services" className={linkClass("/services")}>
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-700">
+            <Link href="/services" className="hover:text-blue-700 transition">
               Services
             </Link>
-            <Link href="/about" className={linkClass("/about")}>
+            <Link href="/about" className="hover:text-blue-700 transition">
               Why Choose Us
             </Link>
+
+            {/* UPDATED CTA — scrolls to quote */}
             <a
-              href="tel:2679452247"
-              className="ml-2 bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700 transition"
+              href="/contact"
+              className="bg-red-600 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-red-700 transition"
             >
               Call Now
             </a>
           </nav>
 
-          {/* MOBILE TOGGLE */}
+          {/* MOBILE MENU BUTTON */}
           <button
             onClick={() => setMenuOpen(true)}
-            className="md:hidden text-gray-800 text-2xl"
-            aria-label="Open menu"
+            className="md:hidden text-2xl"
+            aria-label="Open Menu"
           >
             ☰
           </button>
         </div>
       </header>
 
-      {/* MOBILE MENU OVERLAY */}
+      {/* MOBILE MENU */}
       {menuOpen && (
-        <div className="fixed inset-0 z-50">
-          <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-            onClick={() => setMenuOpen(false)}
-          />
-
-          <div className="absolute top-0 right-0 h-full w-80 bg-white shadow-2xl p-6 flex flex-col gap-6 animate-slide-in">
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm">
+          <div className="absolute top-0 right-0 h-full w-72 bg-white shadow-xl p-6 flex flex-col gap-6">
             <button
               onClick={() => setMenuOpen(false)}
-              className="self-end text-2xl"
-              aria-label="Close menu"
+              className="self-end text-xl"
+              aria-label="Close Menu"
             >
               ✕
             </button>
 
-            <Link
-              href="/services"
-              onClick={() => setMenuOpen(false)}
-              className="text-lg font-medium text-gray-800"
-            >
+            <Link href="/services" onClick={() => setMenuOpen(false)} className="text-lg font-medium">
               Services
             </Link>
 
-            <Link
-              href="/about"
-              onClick={() => setMenuOpen(false)}
-              className="text-lg font-medium text-gray-800"
-            >
+            <Link href="/about" onClick={() => setMenuOpen(false)} className="text-lg font-medium">
               Why Choose Us
             </Link>
 
+            {/* UPDATED MOBILE CTA */}
             <a
-              href="tel:2679452247"
-              className="mt-4 bg-red-600 text-white py-3 rounded-lg text-center font-semibold"
+              href="/contact"
+              onClick={() => setMenuOpen(false)}
+              className="mt-auto bg-red-600 text-white text-center py-3 rounded-lg font-semibold"
             >
-              Call (267) 945-2247
+              Get Free Quote
             </a>
           </div>
         </div>
       )}
+
+      {/* Spacer */}
+      <div className="h-16" />
     </>
   );
 }
