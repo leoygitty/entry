@@ -38,11 +38,11 @@ export default function Hero() {
             precision and care.
           </p>
 
-          <ul className="space-y-3 text-white/90">
-            <li>✔ Exterior & Interior Doors</li>
-            <li>✔ Security & Custom Fit Options</li>
-            <li>✔ Clean, Professional Installation</li>
-          </ul>
+         <ul className="space-y-3 text-white">
+  <li className="text-white">✔ Exterior & Interior Doors</li>
+  <li className="text-white">✔ Security & Custom Fit Options</li>
+  <li className="text-white">✔ Clean, Professional Installation</li>
+</ul>
         </div>
 
         {/* RIGHT: QUIZ CARD */}
