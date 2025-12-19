@@ -39,57 +39,61 @@ export default function Home() {
             </ul>
           </div>
 
-          {/* VIDEO */}
-          <div className="rounded-2xl overflow-hidden shadow-xl border">
+          {/* FIRST VIDEO */}
+          <div className="rounded-2xl overflow-hidden shadow-xl border bg-black">
             <video
-              src="/custom-door.mp4"
               controls
               muted
               playsInline
               preload="metadata"
-              className="w-full h-full object-cover"
-            />
+              className="w-full h-auto"
+            >
+              <source src="/custom-door.mp4" type="video/mp4" />
+            </video>
           </div>
 
         </div>
       </section>
 
       {/* SECOND CUSTOM DOOR VIDEO + TRUST COPY */}
-<section className="container mx-auto py-20">
-  <div className="grid md:grid-cols-2 gap-12 items-center">
+      <section className="container mx-auto py-20 px-6">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
 
-    {/* VIDEO */}
-    <div className="rounded-xl overflow-hidden shadow-xl">
-      <video
-        src="/custom-door-2.mp4"
-        controls
-        playsInline
-        className="w-full h-auto rounded-xl"
-      />
-    </div>
+          {/* SECOND VIDEO — FIXED */}
+          <div className="rounded-2xl overflow-hidden shadow-xl border bg-black">
+            <video
+              controls
+              muted
+              playsInline
+              preload="metadata"
+              className="w-full h-auto"
+            >
+              <source src="/custom-door2.mp4" type="video/mp4" />
+            </video>
+          </div>
 
-    {/* TRUST TEXT */}
-    <div>
-      <h3 className="text-2xl font-bold text-primary mb-4">
-        Real Custom Hidden Door Project
-      </h3>
+          {/* TRUST TEXT */}
+          <div>
+            <h3 className="text-2xl font-bold text-primary mb-4">
+              Real Custom Hidden Door Project
+            </h3>
 
-      <p className="text-gray-600 text-lg leading-relaxed">
-        The videos shown on this page are from a real custom installation
-        completed by our team. This project featured a hidden door designed
-        to blend seamlessly into the surrounding space while maintaining
-        full functionality and security.
-      </p>
+            <p className="text-gray-600 text-lg leading-relaxed">
+              The videos shown on this page are from a real custom installation
+              completed by our team. This project featured a hidden door designed
+              to blend seamlessly into the surrounding space while maintaining
+              full functionality and security.
+            </p>
 
-      <p className="text-gray-600 text-lg leading-relaxed mt-4">
-        Every custom door we install is carefully measured, fitted, and
-        installed with precision — ensuring smooth operation, a clean
-        finish, and long-term durability.
-      </p>
-    </div>
+            <p className="text-gray-600 text-lg leading-relaxed mt-4">
+              Every custom door we install is carefully measured, fitted, and
+              installed with precision — ensuring smooth operation, a clean
+              finish, and long-term durability.
+            </p>
+          </div>
 
-  </div>
-</section>
+        </div>
+      </section>
 
       {/* TESTIMONIALS */}
       <Testimonials />
