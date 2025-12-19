@@ -2,8 +2,9 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 
-export default function Hero() {
+export default function Home() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -11,13 +12,15 @@ export default function Hero() {
     message: "",
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission (e.g., send to API)
     console.log("Form submitted:", formData);
   };
 
@@ -28,7 +31,7 @@ export default function Hero() {
       transition={{ duration: 1.2, ease: "easeOut" }}
       className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 to-blue-600 overflow-hidden"
     >
-      {/* Subtle Parallax Background Layers */}
+      {/* Background layers */}
       <motion.div
         className="absolute inset-0 bg-gradient-to-r from-red-600/10 to-transparent"
         initial={{ x: -100 }}
@@ -43,7 +46,8 @@ export default function Hero() {
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
-        {/* Text Content */}
+        
+        {/* LEFT COPY */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -51,94 +55,79 @@ export default function Hero() {
           className="text-white space-y-8"
         >
           <h1 className="text-5xl lg:text-7xl font-bold tracking-tight leading-tight">
-            Elevate Your Entryway with <span className="text-red-400">Premium Craftsmanship</span>
+            Elevate Your Entryway with{" "}
+            <span className="text-red-400">Premium Craftsmanship</span>
           </h1>
+
           <p className="text-xl lg:text-2xl leading-relaxed opacity-90">
-            Entry Solutions LLC specializes in professional doorway installations and home improvements that blend security, style, and sophistication. Transform your space with our expert team.
+            Entry Solutions LLC delivers expert doorway installations that blend
+            security, performance, and design — installed with precision.
           </p>
+
           <motion.a
             href="#quote"
-            whileHover={{ scale: 1.05, backgroundColor: "#ef4444" }}
-            transition={{ duration: 0.3 }}
-            className="inline-block px-8 py-4 bg-red-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+            whileHover={{ scale: 1.05 }}
+            className="inline-block px-8 py-4 bg-red-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition"
           >
             Get Your Free Quote Today
           </motion.a>
         </motion.div>
 
-        {/* Quote Form */}
+        {/* QUOTE FORM */}
         <motion.div
+          id="quote"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-white/20 lg:mt-0" // Glassmorphism effect
+          className="bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-white/20"
         >
-          <h2 className="text-3xl font-bold text-white mb-6">Request a Quote</h2>
+          <h2 className="text-3xl font-bold text-white mb-6">
+            Request a Quote
+          </h2>
+
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-white/80 mb-2">
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-red-400 transition-colors"
-                placeholder="Your Name"
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-white/80 mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-red-400 transition-colors"
-                placeholder="your@email.com"
-              />
-            </div>
-            <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-white/80 mb-2">
-                Phone
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-red-400 transition-colors"
-                placeholder="(123) 456-7890"
-              />
-            </div>
-            <div>
-              <label htmlFor="message" className="block text-sm font-medium text-white/80 mb-2">
-                Project Details
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                rows={4}
-                className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-red-400 transition-colors"
-                placeholder="Tell us about your project..."
-              />
-            </div>
+            <input
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Your Name"
+              required
+              className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-red-400"
+            />
+
+            <input
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Email Address"
+              required
+              className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-red-400"
+            />
+
+            <input
+              name="phone"
+              type="tel"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="Phone Number"
+              required
+              className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-red-400"
+            />
+
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              rows={4}
+              placeholder="Tell us about your project..."
+              className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-red-400"
+            />
+
             <motion.button
               type="submit"
-              whileHover={{ scale: 1.02, backgroundColor: "#ef4444" }}
-              transition={{ duration: 0.3 }}
-              className="w-full px-6 py-4 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+              whileHover={{ scale: 1.03 }}
+              className="w-full px-6 py-4 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition"
             >
               Submit Quote Request
             </motion.button>
