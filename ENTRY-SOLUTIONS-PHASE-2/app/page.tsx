@@ -100,6 +100,103 @@ export default function Home() {
             </div>
           </div>
 
+          {/* PREMIUM INSTALLATION GALLERY */}
+<section className="relative py-28 overflow-hidden bg-white">
+  {/* subtle background wash */}
+  <div className="absolute inset-0 bg-gradient-to-b from-slate-50 to-white" />
+
+  <div className="relative max-w-7xl mx-auto px-6">
+
+    {/* SECTION HEADER */}
+    <div className="max-w-2xl mb-16">
+      <p className="text-sm uppercase tracking-widest text-gray-500 mb-3">
+        Our Work
+      </p>
+
+      <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+        Precision Installed. <br />Built to Last.
+      </h2>
+
+      <p className="text-gray-600 text-lg">
+        A selection of real door installations completed by our team —
+        residential, commercial, and custom projects crafted with care.
+      </p>
+    </div>
+
+    {/* HORIZONTAL SCROLL GALLERY */}
+    <div className="relative">
+      <div
+        className="
+          flex gap-8 overflow-x-auto snap-x snap-mandatory
+          pb-6
+          [-ms-overflow-style:none]
+          [scrollbar-width:none]
+          [&::-webkit-scrollbar]:hidden
+        "
+      >
+        {[
+          "/gallery/door-1.jpg",
+          "/gallery/door-2.jpg",
+          "/gallery/door-3.jpg",
+          "/gallery/door-4.jpg",
+          "/gallery/door-5.jpg",
+        ].map((src, i) => (
+          <div
+            key={i}
+            className="
+              relative flex-shrink-0
+              w-[85vw] sm:w-[65vw] md:w-[45vw] lg:w-[38vw]
+              aspect-[4/5]
+              snap-center
+              rounded-3xl
+              overflow-hidden
+              shadow-xl
+              group
+              transition-transform duration-500
+              hover:-translate-y-1
+            "
+          >
+            {/* IMAGE */}
+            <img
+              src={src}
+              alt="Door installation project"
+              className="
+                absolute inset-0 w-full h-full object-cover
+                transition-transform duration-700
+                group-hover:scale-105
+              "
+            />
+
+            {/* GLASS OVERLAY */}
+            <div
+              className="
+                absolute inset-x-0 bottom-0
+                bg-white/70 backdrop-blur-md
+                p-5
+                border-t border-white/60
+              "
+            >
+              <p className="text-sm font-semibold text-gray-900">
+                Custom Door Installation
+              </p>
+              <p className="text-xs text-gray-600">
+                Precision fit • Clean finish • Real project
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* SCROLL HINT */}
+      <div className="mt-6 flex items-center gap-2 text-sm text-gray-500">
+        <span>← Swipe</span>
+        <div className="h-px w-12 bg-gray-300" />
+        <span>→</span>
+      </div>
+    </div>
+  </div>
+</section>
+
           {/* TRUST TEXT */}
           <div>
             <h3 className="text-2xl font-bold text-primary mb-4">
