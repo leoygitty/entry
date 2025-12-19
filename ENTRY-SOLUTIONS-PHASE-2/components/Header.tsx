@@ -7,74 +7,74 @@ import { usePathname } from "next/navigation";
 
 export default function Header() {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [lastScroll, setLastScroll] = useState(0);
 
   useEffect(() => {
+    let lastY = window.scrollY;
+
     const onScroll = () => {
-      const current = window.scrollY;
+      const currentY = window.scrollY;
+      setScrolled(currentY > 10);
 
-      setScrolled(current > 40);
-
-      if (current > lastScroll && current > 120) {
+      if (currentY > lastY && currentY > 80) {
         setHidden(true);
       } else {
         setHidden(false);
       }
 
-      setLastScroll(current);
+      lastY = currentY;
     };
 
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
-  }, [lastScroll]);
+  }, []);
 
-  const navItem = (href: string, label: string) => (
-    <Link
-      href={href}
-      className={`relative pb-1 transition ${
-        pathname === href
-          ? "text-blue-700 font-semibold after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-blue-700"
-          : "text-gray-800 hover:text-blue-700"
-      }`}
-    >
-      {label}
-    </Link>
-  );
+  const linkClass = (href: string) =>
+    `relative transition ${
+      pathname === href
+        ? "text-blue-900 after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-full after:bg-red-600"
+        : "text-gray-700 hover:text-blue-900"
+    }`;
 
   return (
     <>
+      {/* HEADER */}
       <header
         className={`
-          fixed top-0 left-0 w-full z-50
-          bg-white/90 backdrop-blur border-b border-gray-200
+          fixed top-0 inset-x-0 z-50
+          bg-white/90 backdrop-blur
+          border-b border-black/5
           transition-transform duration-300
           ${hidden ? "-translate-y-full" : "translate-y-0"}
         `}
       >
-        <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+        <div className="container mx-auto px-6 h-16 flex items-center justify-between">
           
           {/* LOGO */}
           <Link href="/" className="flex items-center">
             <Image
               src="/logo.png"
               alt="Entry Solutions Door Installation"
-              width={scrolled ? 125 : 145}
-              height={40}
+              width={140}
+              height={44}
               priority
-              className="object-contain transition-all duration-300"
+              className="object-contain"
             />
           </Link>
 
           {/* DESKTOP NAV */}
-          <nav className="hidden md:flex items-center gap-8 text-sm">
-            {navItem("/services", "Services")}
-            {navItem("/about", "Why Choose Us")}
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
+            <Link href="/services" className={linkClass("/services")}>
+              Services
+            </Link>
+            <Link href="/about" className={linkClass("/about")}>
+              Why Choose Us
+            </Link>
             <a
               href="tel:2679452247"
-              className="bg-red-600 text-white px-4 py-2 rounded-full font-semibold hover:bg-red-700 transition"
+              className="ml-2 bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700 transition"
             >
               Call Now
             </a>
@@ -82,50 +82,57 @@ export default function Header() {
 
           {/* MOBILE TOGGLE */}
           <button
-            onClick={() => setOpen(!open)}
-            className="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition"
-            aria-label="Toggle menu"
+            onClick={() => setMenuOpen(true)}
+            className="md:hidden text-gray-800 text-2xl"
+            aria-label="Open menu"
           >
-            <span className="text-2xl">{open ? "✕" : "☰"}</span>
+            ☰
           </button>
         </div>
       </header>
 
-      {/* MOBILE OVERLAY */}
-      <div
-        className={`
-          fixed inset-0 z-40 transition
-          ${open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}
-        `}
-      >
-        <div
-          className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-          onClick={() => setOpen(false)}
-        />
+      {/* MOBILE MENU OVERLAY */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-50">
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setMenuOpen(false)}
+          />
 
-        <div
-          className={`
-            absolute top-14 inset-x-0 bg-white
-            transform transition-all duration-300
-            ${open ? "translate-y-0" : "-translate-y-6"}
-          `}
-        >
-          <nav className="flex flex-col gap-6 px-6 py-8 text-lg font-medium">
-            <Link href="/services" onClick={() => setOpen(false)}>
+          <div className="absolute top-0 right-0 h-full w-80 bg-white shadow-2xl p-6 flex flex-col gap-6 animate-slide-in">
+            <button
+              onClick={() => setMenuOpen(false)}
+              className="self-end text-2xl"
+              aria-label="Close menu"
+            >
+              ✕
+            </button>
+
+            <Link
+              href="/services"
+              onClick={() => setMenuOpen(false)}
+              className="text-lg font-medium text-gray-800"
+            >
               Services
             </Link>
-            <Link href="/about" onClick={() => setOpen(false)}>
+
+            <Link
+              href="/about"
+              onClick={() => setMenuOpen(false)}
+              className="text-lg font-medium text-gray-800"
+            >
               Why Choose Us
             </Link>
+
             <a
               href="tel:2679452247"
-              className="mt-2 bg-red-600 text-white text-center py-3 rounded-full font-semibold"
+              className="mt-4 bg-red-600 text-white py-3 rounded-lg text-center font-semibold"
             >
-              📞 Call Now
+              Call (267) 945-2247
             </a>
-          </nav>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }
