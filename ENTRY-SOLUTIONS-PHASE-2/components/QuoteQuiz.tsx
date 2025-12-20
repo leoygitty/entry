@@ -108,7 +108,7 @@ export default function QuoteQuiz() {
   `;
 
   return (
-    <div className="bg-white/95 backdrop-blur rounded-2xl p-6 shadow-xl w-full max-w-md">
+    <div className="bg-white/98 backdrop-blur-xl rounded-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.18)] w-full max-w-md">
       {/* HEADER */}
       <h2 className="text-2xl font-bold text-primary mb-1">
         Get a Free Quote
