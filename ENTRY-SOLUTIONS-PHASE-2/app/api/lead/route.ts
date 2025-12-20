@@ -96,7 +96,7 @@ export async function POST(req: Request) {
   .setFrom(sentFrom)
   .setTo([new Recipient("entrysolutionllc@gmail.com", "Entry Solutions")])
   .setCc([new Recipient("tesoromanagements@gmail.com", "Tesoro Management")])  
-       ])
+   
       .setSubject(
         `${band} Lead (${score}/100) — ${data.projectType || "Unknown"} / ${data.service || "Unknown"}`
       )
