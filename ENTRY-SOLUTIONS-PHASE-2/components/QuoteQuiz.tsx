@@ -90,13 +90,13 @@ export default function QuoteQuiz() {
       {step === 0 && (
         <div className="space-y-4 animate-fade-in">
           <h3 className="text-lg font-semibold text-primary">
-            🏠 What type of project is this?
+            🏠 Where is this door being installed?
           </h3>
 
           {[
-            { label: "Residential", emoji: "🏡" },
-            { label: "Commercial", emoji: "🏢" },
-            { label: "Custom", emoji: "✨" },
+            { label: "Residential Home", emoji: "🏡" },
+            { label: "Commercial Property", emoji: "🏢" },
+            { label: "Custom/Specialty Project", emoji: "✨" },
           ].map((opt) => {
             const selected = form.projectType === opt.label;
 
@@ -130,7 +130,7 @@ export default function QuoteQuiz() {
       {step === 1 && (
         <div className="space-y-4 animate-fade-in">
           <h3 className="text-lg font-semibold text-primary">
-            🔧 What service do you need?
+           🔧 What are you looking to do?
           </h3>
 
           {[
@@ -174,23 +174,23 @@ export default function QuoteQuiz() {
       {step === 2 && (
         <div className="space-y-4 animate-fade-in">
           <h3 className="text-lg font-semibold text-primary">
-            📞 Where should we send your quote?
+           📞 Where should we send your free estimate?
           </h3>
 
           <input
-            placeholder="Full Name"
+            placeholder="👤 Full Name"
             className="w-full border rounded-lg p-3 text-black focus:ring-2 focus:ring-blue-600"
             onChange={(e) => setForm({ ...form, name: e.target.value })}
           />
 
           <input
-            placeholder="Phone Number"
+            placeholder="📞 Best Phone Number (we’ll call or text)"
             className="w-full border rounded-lg p-3 text-black focus:ring-2 focus:ring-blue-600"
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
           />
 
           <input
-            placeholder="Email Address"
+            placeholder="✉️ Email (for your estimate details)"
             className="w-full border rounded-lg p-3 text-black focus:ring-2 focus:ring-blue-600"
             onChange={(e) => setForm({ ...form, email: e.target.value })}
           />
