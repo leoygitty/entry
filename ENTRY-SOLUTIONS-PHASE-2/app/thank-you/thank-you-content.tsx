@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export default function ThankYouContent() {
   const params = useSearchParams();
@@ -10,18 +10,49 @@ export default function ThankYouContent() {
   const service = params.get("service");
   const urgency = params.get("urgency");
 
-  /* ----------------------------
-     URGENCY MESSAGING
-  ---------------------------- */
+  const calendlyOpened = useRef(false);
+
   const isASAP = urgency === "ASAP";
   const isCustom = projectType === "Custom";
 
   /* ----------------------------
-     OPTIONAL: auto-scroll focus
+     Scroll to top on load
   ---------------------------- */
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+
+  /* ----------------------------
+     🔥 INSTANT BOOKING (Custom)
+     Auto-open Calendly once
+  ---------------------------- */
+  useEffect(() => {
+    if (!isCustom) return;
+
+    const tryOpenCalendly = () => {
+      if (
+        typeof window !== "undefined" &&
+        (window as any).Calendly &&
+        !calendlyOpened.current
+      ) {
+        calendlyOpened.current = true;
+        (window as any).Calendly.initPopupWidget({
+          url: "https://calendly.com/tesoromanagements/custom-door-consultation",
+        });
+      }
+    };
+
+    // Try immediately
+    tryOpenCalendly();
+
+    // Retry shortly in case script loads late
+    const interval = setInterval(tryOpenCalendly, 500);
+
+    // Stop after 5 seconds
+    setTimeout(() => clearInterval(interval), 5000);
+
+    return () => clearInterval(interval);
+  }, [isCustom]);
 
   return (
     <div className="max-w-xl mx-auto text-center py-16 px-6">
@@ -30,7 +61,7 @@ export default function ThankYouContent() {
       </h1>
 
       {/* ----------------------------
-         DYNAMIC MESSAGE
+         URGENCY MESSAGING
       ---------------------------- */}
       {isASAP ? (
         <>
@@ -43,17 +74,15 @@ export default function ThankYouContent() {
           </p>
         </>
       ) : (
-        <>
-          <p className="text-gray-700 mb-6">
-            Thanks for requesting a quote for your
-            <strong> {service}</strong>.
-            We’ll reach out shortly with next steps.
-          </p>
-        </>
+        <p className="text-gray-700 mb-6">
+          Thanks for requesting a quote for your
+          <strong> {service}</strong>.  
+          We’ll reach out shortly with next steps.
+        </p>
       )}
 
       {/* ----------------------------
-         CALENDAR PROMPT (CUSTOM)
+         CUSTOM PROJECT CTA
       ---------------------------- */}
       {isCustom && (
         <div className="mt-8">
@@ -62,20 +91,20 @@ export default function ThankYouContent() {
           </p>
 
           <button
-  onClick={() => {
-    window.Calendly?.initPopupWidget({
-      url: "https://calendly.com/tesoromanagements/custom-door-consultation",
-    });
-  }}
-  className="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:opacity-90 transition"
->
-  📅 Book Your Custom Door Consultation
-</button>
+            onClick={() => {
+              (window as any).Calendly?.initPopupWidget({
+                url: "https://calendly.com/tesoromanagements/custom-door-consultation",
+              });
+            }}
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:opacity-90 transition"
+          >
+            📅 Book Your Custom Door Consultation
+          </button>
         </div>
       )}
 
       {/* ----------------------------
-         FALLBACK CTA
+         FOOTER
       ---------------------------- */}
       <p className="text-xs text-gray-500 mt-10">
         Entry Solutions LLC • Professional Door Installation
