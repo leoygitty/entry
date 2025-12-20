@@ -1,9 +1,45 @@
 import { NextResponse } from "next/server";
 import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
 
+function scoreLead(data: {
+  projectType?: string;
+  service?: string;
+  name?: string;
+  phone?: string;
+  email?: string;
+}) {
+  let score = 0;
+
+  const projectType = (data.projectType || "").toLowerCase();
+  const service = (data.service || "").toLowerCase();
+
+  // Project type weights
+  if (projectType.includes("custom")) score += 40;
+  else if (projectType.includes("residential")) score += 25;
+  else if (projectType.includes("commercial")) score += 20;
+
+  // Service weights
+  if (service.includes("installation")) score += 15;
+  if (service.includes("replacement")) score += 10;
+  if (service.includes("custom")) score += 20;
+
+  // Contact completeness
+  const hasPhone = Boolean((data.phone || "").trim());
+  const hasEmail = Boolean((data.email || "").trim());
+  if (hasPhone && hasEmail) score += 20;
+  if (!hasPhone) score -= 30;
+
+  // Clamp 0–100
+  score = Math.max(0, Math.min(100, score));
+
+  const band = score >= 80 ? "HOT 🔥" : score >= 50 ? "WARM ♨️" : "LOW ❄️";
+  return { score, band };
+}
+
 export async function POST(req: Request) {
   try {
     const data = await req.json();
+    const { score, band } = scoreLead(data);
 
     // Basic validation
     if (!data.name || !data.phone || !data.email) {
@@ -34,9 +70,12 @@ export async function POST(req: Request) {
     const adminEmail = new EmailParams()
       .setFrom(sentFrom)
       .setTo(adminRecipients)
-      .setSubject("🚪 New Door Installation Lead")
+      .setSubject(`${band} Lead (${score}) — ${data.projectType || "Unknown"} — ${data.service || "Unknown"}`)
       .setHtml(`
         <h2>New Website Lead</h2>
+        <p><strong>Lead Priority:</strong> ${band}</p>
+<p><strong>Lead Score:</strong> ${score}/100</p>
+<hr />
         <p><strong>Project Type:</strong> ${data.projectType || "—"}</p>
         <p><strong>Service:</strong> ${data.service || "—"}</p>
         <p><strong>Name:</strong> ${data.name}</p>
