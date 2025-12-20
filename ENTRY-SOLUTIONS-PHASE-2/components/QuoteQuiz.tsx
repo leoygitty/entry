@@ -132,11 +132,16 @@ export default function QuoteQuiz() {
     <div
       ref={quizRef}
       className={`
-        bg-white/98 backdrop-blur-xl rounded-2xl p-6
-        shadow-[0_20px_60px_rgba(0,0,0,0.18)]
+        bg-white/90 backdrop-blur-md rounded-2xl p-6
+        shadow-[0_12px_30px_rgba(0,0,0,0.12)]
         w-full max-w-md
-        md:static
-        fixed md:bottom-auto bottom-4 left-1/2 -translate-x-1/2
+
+        /* Mobile positioning */
+        fixed bottom-4 left-1/2 -translate-x-1/2 mt-24
+
+        /* Desktop positioning */
+        md:static md:mt-0 md:ml-auto md:mr-0 md:translate-x-0
+
         ${isSticky ? "z-40" : ""}
       `}
     >
