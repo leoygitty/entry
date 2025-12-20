@@ -93,11 +93,10 @@ export async function POST(req: Request) {
        1️⃣ ADMIN / INTERNAL EMAIL
     -------------------------------- */
     const adminEmail = new EmailParams()
-      .setFrom(sentFrom)
-      .setTo([
-        new Recipient("entrysolutionllc@gmail.com", "Entry Solutions"),
-        new Recipient("tesoromanagements@gmail.com", "Tesoro Management"),
-      ])
+  .setFrom(sentFrom)
+  .setTo([new Recipient("entrysolutionllc@gmail.com", "Entry Solutions")])
+  .setCc([new Recipient("tesoromanagements@gmail.com", "Tesoro Management")])  
+       ])
       .setSubject(
         `${band} Lead (${score}/100) — ${data.projectType || "Unknown"} / ${data.service || "Unknown"}`
       )
