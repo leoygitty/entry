@@ -1,27 +1,54 @@
-const getTrackingParams = () => {
-  if (typeof window === "undefined") return {};
-
-  const params = new URLSearchParams(window.location.search);
-
-  return {
-    utm_source: params.get("utm_source"),
-    utm_medium: params.get("utm_medium"),
-    utm_campaign: params.get("utm_campaign"),
-    utm_term: params.get("utm_term"),
-    gclid: params.get("gclid"),
-    fbclid: params.get("fbclid"),
-  };
-};
-
 "use client";
 
 import { useState } from "react";
 
-const steps = ["Project Type", "Service", "Contact"];
+const steps = ["Project Type", "Service", "Contact"] as const;
+
+type LeadForm = {
+  projectType: string;
+  service: string;
+  name: string;
+  phone: string;
+  email: string;
+};
+
+type TrackingParams = {
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_term?: string;
+  utm_content?: string;
+  gclid?: string;
+  fbclid?: string;
+};
+
+const getTrackingParams = (): TrackingParams => {
+  if (typeof window === "undefined") return {};
+
+  const params = new URLSearchParams(window.location.search);
+
+  const tracking: TrackingParams = {
+    utm_source: params.get("utm_source") ?? undefined,
+    utm_medium: params.get("utm_medium") ?? undefined,
+    utm_campaign: params.get("utm_campaign") ?? undefined,
+    utm_term: params.get("utm_term") ?? undefined,
+    utm_content: params.get("utm_content") ?? undefined,
+    gclid: params.get("gclid") ?? undefined,
+    fbclid: params.get("fbclid") ?? undefined,
+  };
+
+  // Remove empty/undefined keys
+  Object.keys(tracking).forEach((k) => {
+    const key = k as keyof TrackingParams;
+    if (!tracking[key]) delete tracking[key];
+  });
+
+  return tracking;
+};
 
 export default function QuoteQuiz() {
   const [step, setStep] = useState(0);
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<LeadForm>({
     projectType: "",
     service: "",
     name: "",
@@ -37,11 +64,30 @@ export default function QuoteQuiz() {
     try {
       setSubmitting(true);
 
-      await fetch("/api/lead", {
+      const tracking = getTrackingParams();
+
+      const payload = {
+        ...form,
+        ...tracking,
+        page_url: typeof window !== "undefined" ? window.location.href : undefined,
+        referrer: typeof document !== "undefined" ? document.referrer || undefined : undefined,
+      };
+
+      // Remove undefined keys so your API/email stays clean
+      Object.keys(payload).forEach((k) => {
+        const key = k as keyof typeof payload;
+        if (payload[key] === undefined) delete payload[key];
+      });
+
+      const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
+
+      if (!res.ok) {
+        throw new Error(`Lead submission failed: ${res.status}`);
+      }
 
       alert("Thank you! A team member will reach out shortly.");
     } catch (err) {
@@ -54,11 +100,8 @@ export default function QuoteQuiz() {
 
   return (
     <div className="bg-white/95 backdrop-blur rounded-2xl p-6 shadow-xl w-full max-w-md">
-
       {/* HEADER */}
-      <h2 className="text-2xl font-bold text-primary mb-1">
-        Get a Free Quote
-      </h2>
+      <h2 className="text-2xl font-bold text-primary mb-1">Get a Free Quote</h2>
       <p className="text-sm text-gray-600 mb-4">
         Step {step + 1} of {steps.length} • Takes under 30 seconds ⏱️
       </p>
@@ -71,7 +114,6 @@ export default function QuoteQuiz() {
             style={{ width: `${((step + 1) / steps.length) * 100}%` }}
           />
         </div>
-
         <p className="mt-2 text-xs text-gray-500 text-center">
           Almost there — most people finish this 👍
         </p>
@@ -80,9 +122,7 @@ export default function QuoteQuiz() {
       {/* STEP 1 */}
       {step === 0 && (
         <div className="space-y-4 animate-fade-in">
-          <h3 className="text-lg font-semibold text-primary">
-            🏠 What type of project is this?
-          </h3>
+          <h3 className="text-lg font-semibold text-primary">🏠 What type of project is this?</h3>
 
           {[
             { label: "Residential", emoji: "🏡" },
@@ -92,7 +132,7 @@ export default function QuoteQuiz() {
             <button
               key={opt.label}
               onClick={() => {
-                setForm({ ...form, projectType: opt.label });
+                setForm((prev) => ({ ...prev, projectType: opt.label }));
                 next();
               }}
               className="
@@ -113,9 +153,7 @@ export default function QuoteQuiz() {
       {/* STEP 2 */}
       {step === 1 && (
         <div className="space-y-4 animate-fade-in">
-          <h3 className="text-lg font-semibold text-primary">
-            🔧 What service do you need?
-          </h3>
+          <h3 className="text-lg font-semibold text-primary">🔧 What service do you need?</h3>
 
           {[
             { label: "Door Installation", emoji: "🚪" },
@@ -125,7 +163,7 @@ export default function QuoteQuiz() {
             <button
               key={opt.label}
               onClick={() => {
-                setForm({ ...form, service: opt.label });
+                setForm((prev) => ({ ...prev, service: opt.label }));
                 next();
               }}
               className="
@@ -150,20 +188,17 @@ export default function QuoteQuiz() {
       {/* STEP 3 */}
       {step === 2 && (
         <div className="space-y-4 animate-fade-in">
-          <h3 className="text-lg font-semibold text-primary">
-            📞 Where should we send your quote?
-          </h3>
+          <h3 className="text-lg font-semibold text-primary">📞 Where should we send your quote?</h3>
 
-          <p className="text-sm text-gray-600">
-            We’ll call or text you shortly to help with pricing.
-          </p>
+          <p className="text-sm text-gray-600">We’ll call or text you shortly to help with pricing.</p>
 
           <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2">👤</span>
             <input
               placeholder="Full Name"
+              value={form.name}
+              onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
               className="w-full border rounded-lg p-3 pl-10 text-black focus:outline-none focus:ring-2 focus:ring-primary"
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
             />
           </div>
 
@@ -171,8 +206,9 @@ export default function QuoteQuiz() {
             <span className="absolute left-3 top-1/2 -translate-y-1/2">📞</span>
             <input
               placeholder="Best Phone Number (call or text)"
+              value={form.phone}
+              onChange={(e) => setForm((prev) => ({ ...prev, phone: e.target.value }))}
               className="w-full border rounded-lg p-3 pl-10 text-black focus:outline-none focus:ring-2 focus:ring-primary"
-              onChange={(e) => setForm({ ...form, phone: e.target.value })}
             />
           </div>
 
@@ -180,8 +216,9 @@ export default function QuoteQuiz() {
             <span className="absolute left-3 top-1/2 -translate-y-1/2">✉️</span>
             <input
               placeholder="Email Address"
+              value={form.email}
+              onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
               className="w-full border rounded-lg p-3 pl-10 text-black focus:outline-none focus:ring-2 focus:ring-primary"
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
             />
           </div>
 
@@ -190,8 +227,7 @@ export default function QuoteQuiz() {
             onClick={submitLead}
             className="
               w-full bg-gradient-to-r from-red-600 to-blue-700
-              text-white rounded-lg py-3
-              font-bold text-lg
+              text-white rounded-lg py-3 font-bold text-lg
               hover:opacity-90 transition
               disabled:opacity-50
             "
@@ -199,9 +235,7 @@ export default function QuoteQuiz() {
             🚀 {submitting ? "Sending..." : "Get My Free Quote"}
           </button>
 
-          <p className="text-xs text-gray-500 text-center">
-            ✔ No spam • ✔ No pressure • ✔ Fast response
-          </p>
+          <p className="text-xs text-gray-500 text-center">✔ No spam • ✔ No pressure • ✔ Fast response</p>
 
           <button onClick={back} className="text-sm text-gray-400">
             ← Back
