@@ -83,3 +83,54 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
 }
+
+/* =====================================================
+   🔥 NEW — iOS / SAFARI / QUIZ POLISH (ADDITIVE ONLY)
+===================================================== */
+
+/* Prevent iOS zoom on input focus */
+input,
+textarea,
+select {
+  font-size: 16px;
+}
+
+/* Smooth momentum scrolling (iOS native feel) */
+body {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Sticky quiz card elevation (iOS Maps style) */
+.quiz-sticky {
+  box-shadow:
+    0 -12px 30px rgba(0, 0, 0, 0.18),
+    0 -2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Subtle backdrop when quiz is sticky */
+.quiz-backdrop {
+  backdrop-filter: blur(12px) saturate(1.1);
+  -webkit-backdrop-filter: blur(12px) saturate(1.1);
+}
+
+/* Hero dim transition helper */
+.hero-dim {
+  transition: filter 0.45s ease;
+}
+
+/* Disable rubber-band bounce under sticky card */
+@supports (-webkit-touch-callout: none) {
+  body {
+    overscroll-behavior-y: none;
+  }
+}
+
+/* Improve tap response timing */
+button {
+  touch-action: manipulation;
+}
+
+/* iOS-style easing for transforms */
+* {
+  scroll-behavior: smooth;
+}
