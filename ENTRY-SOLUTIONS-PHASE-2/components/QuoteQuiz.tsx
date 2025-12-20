@@ -45,16 +45,10 @@ export default function QuoteQuiz() {
     ...getTrackingParams(),
   });
 
-  /* -----------------------------------
-     Inject tracking once
-  ----------------------------------- */
   useEffect(() => {
     setForm((prev) => ({ ...prev, ...getTrackingParams() }));
   }, []);
 
-  /* -----------------------------------
-     Step helpers
-  ----------------------------------- */
   const steps =
     form.projectType === "Commercial"
       ? BASE_STEPS.filter((s) => s !== "Urgency")
@@ -63,9 +57,6 @@ export default function QuoteQuiz() {
   const next = () => setStep((s) => Math.min(s + 1, steps.length - 1));
   const back = () => setStep((s) => Math.max(s - 1, 0));
 
-  /* -----------------------------------
-     Submit Lead
-  ----------------------------------- */
   const submitLead = async () => {
     try {
       setSubmitting(true);
@@ -78,9 +69,7 @@ export default function QuoteQuiz() {
 
       const result = await res.json();
 
-      if (!res.ok) {
-        throw new Error(result?.error || "Submission failed");
-      }
+      if (!res.ok) throw new Error(result?.error || "Submission failed");
 
       router.push(
         `/thank-you?projectType=${encodeURIComponent(
@@ -90,36 +79,44 @@ export default function QuoteQuiz() {
         )}&urgency=${encodeURIComponent(form.urgency || "N/A")}`
       );
     } catch (err) {
-      console.error("Lead submission failed:", err);
+      console.error(err);
       alert("Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
     }
   };
 
+  /* -----------------------------------
+     Shared Button Style (iOS-like)
+  ----------------------------------- */
   const optionButtonClass = `
-    w-full border rounded-lg py-3
+    w-full rounded-xl py-3
     flex items-center justify-center gap-2
     bg-white text-gray-900 font-medium
+    border border-gray-200
+    shadow-sm
+    hover:border-gray-300 hover:shadow-md
+    active:scale-[0.97]
     hover:bg-primary hover:text-white
-    active:scale-[0.98]
-    focus:outline-none focus:ring-2 focus:ring-primary
     transition-all duration-200
   `;
+
+  const questionClass =
+    "text-[17px] font-semibold tracking-tight text-gray-900";
 
   return (
     <div className="bg-white/98 backdrop-blur-xl rounded-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.18)] w-full max-w-md">
       {/* HEADER */}
-      <h2 className="text-2xl font-bold text-primary mb-1">
+      <h2 className="text-[22px] font-semibold tracking-tight text-gray-900 mb-1">
         Get a Free Quote
       </h2>
-      <p className="text-sm text-gray-600 mb-4">
+      <p className="text-sm text-gray-500 mb-4">
         Step {step + 1} of {steps.length} • Takes under 30 seconds ⏱️
       </p>
 
       {/* PROGRESS BAR */}
       <div className="mb-6">
-        <div className="relative h-3 bg-gray-200 rounded-full overflow-hidden">
+        <div className="relative h-3.5 bg-gray-200/70 rounded-full overflow-hidden">
           <div
             className="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-600 to-red-600 transition-all duration-700"
             style={{ width: `${((step + 1) / steps.length) * 100}%` }}
@@ -130,10 +127,10 @@ export default function QuoteQuiz() {
         </p>
       </div>
 
-      {/* STEP 1 — PROJECT */}
+      {/* STEP 1 */}
       {steps[step] === "Project" && (
         <div className="space-y-4 animate-fade-in">
-          <h3 className="text-lg font-semibold text-primary">
+          <h3 className={questionClass}>
             🏠 What type of project is this?
           </h3>
 
@@ -144,11 +141,11 @@ export default function QuoteQuiz() {
           ].map((opt) => (
             <button
               key={opt.label}
+              className={optionButtonClass}
               onClick={() => {
                 setForm((p) => ({ ...p, projectType: opt.label }));
                 next();
               }}
-              className={optionButtonClass}
             >
               <span className="text-xl">{opt.emoji}</span>
               {opt.label}
@@ -157,10 +154,10 @@ export default function QuoteQuiz() {
         </div>
       )}
 
-      {/* STEP 2 — SERVICE */}
+      {/* STEP 2 */}
       {steps[step] === "Service" && (
         <div className="space-y-4 animate-fade-in">
-          <h3 className="text-lg font-semibold text-primary">
+          <h3 className={questionClass}>
             🔧 What service do you need?
           </h3>
 
@@ -171,11 +168,11 @@ export default function QuoteQuiz() {
           ].map((opt) => (
             <button
               key={opt.label}
+              className={optionButtonClass}
               onClick={() => {
                 setForm((p) => ({ ...p, service: opt.label }));
                 next();
               }}
-              className={optionButtonClass}
             >
               <span className="text-xl">{opt.emoji}</span>
               {opt.label}
@@ -188,10 +185,10 @@ export default function QuoteQuiz() {
         </div>
       )}
 
-      {/* STEP 3 — URGENCY */}
+      {/* STEP 3 */}
       {steps[step] === "Urgency" && (
         <div className="space-y-4 animate-fade-in">
-          <h3 className="text-lg font-semibold text-primary">
+          <h3 className={questionClass}>
             ⏱️ How soon do you need this done?
           </h3>
 
@@ -202,11 +199,11 @@ export default function QuoteQuiz() {
           ].map((opt) => (
             <button
               key={opt.value}
+              className={optionButtonClass}
               onClick={() => {
                 setForm((p) => ({ ...p, urgency: opt.value }));
                 next();
               }}
-              className={optionButtonClass}
             >
               <span className="text-xl">{opt.emoji}</span>
               {opt.label}
@@ -219,10 +216,10 @@ export default function QuoteQuiz() {
         </div>
       )}
 
-      {/* STEP 4 — CONTACT */}
+      {/* STEP 4 */}
       {steps[step] === "Contact" && (
         <div className="space-y-4 animate-fade-in">
-          <h3 className="text-lg font-semibold text-primary">
+          <h3 className={questionClass}>
             📞 Where should we send your quote?
           </h3>
 
@@ -246,14 +243,14 @@ export default function QuoteQuiz() {
               onChange={(e) =>
                 setForm((p) => ({ ...p, [field]: e.target.value }))
               }
-              className="w-full border rounded-lg p-3 text-black focus:ring-2 focus:ring-primary"
+              className="w-full rounded-xl border border-gray-200 p-3 text-gray-900 focus:ring-2 focus:ring-primary"
             />
           ))}
 
           <button
             disabled={submitting}
             onClick={submitLead}
-            className="w-full bg-gradient-to-r from-red-600 to-blue-700 text-white rounded-lg py-3 font-bold text-lg hover:opacity-90 disabled:opacity-50 transition"
+            className="w-full bg-gradient-to-r from-red-600 to-blue-700 text-white rounded-xl py-3 font-semibold text-lg hover:opacity-90 disabled:opacity-50 transition"
           >
             🚀 {submitting ? "Sending..." : "Get My Free Quote"}
           </button>
