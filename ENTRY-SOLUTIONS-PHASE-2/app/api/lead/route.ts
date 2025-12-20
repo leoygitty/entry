@@ -15,20 +15,24 @@ function scoreLead(data: {
   const projectType = (data.projectType || "").toLowerCase();
   const service = (data.service || "").toLowerCase();
 
+  // Project type weighting
   if (projectType.includes("custom")) score += 40;
   else if (projectType.includes("residential")) score += 25;
   else if (projectType.includes("commercial")) score += 20;
 
+  // Service weighting
   if (service.includes("installation")) score += 15;
   if (service.includes("replacement")) score += 10;
   if (service.includes("custom")) score += 20;
 
+  // Contact completeness
   const hasPhone = Boolean(data.phone?.trim());
   const hasEmail = Boolean(data.email?.trim());
 
   if (hasPhone && hasEmail) score += 20;
   if (!hasPhone) score -= 30;
 
+  // Clamp score
   score = Math.max(0, Math.min(100, score));
 
   const band = score >= 80 ? "🔥 HOT" : score >= 50 ? "♨️ WARM" : "❄️ LOW";
@@ -43,6 +47,7 @@ export async function POST(req: Request) {
   try {
     const data = await req.json();
 
+    // Basic validation
     if (!data.name || !data.phone || !data.email) {
       return NextResponse.json(
         { success: false, error: "Missing required fields" },
@@ -62,7 +67,7 @@ export async function POST(req: Request) {
     );
 
     /* -------------------------------
-       ADMIN / INTERNAL EMAIL
+       1️⃣ ADMIN / INTERNAL EMAIL
     -------------------------------- */
     const adminRecipients = [
       new Recipient("entrysolutionllc@gmail.com", "Entry Solutions"),
@@ -72,7 +77,9 @@ export async function POST(req: Request) {
     const adminEmail = new EmailParams()
       .setFrom(sentFrom)
       .setTo(adminRecipients)
-      .setSubject(`${band} Lead (${score}/100) — ${data.projectType} / ${data.service}`)
+      .setSubject(
+        `${band} Lead (${score}/100) — ${data.projectType || "Unknown"} / ${data.service || "Unknown"}`
+      )
       .setHtml(`
         <h2>🚪 New Website Lead</h2>
 
@@ -84,8 +91,8 @@ export async function POST(req: Request) {
         <p><strong>Name:</strong> ${data.name}</p>
         <p><strong>Phone:</strong> ${data.phone}</p>
         <p><strong>Email:</strong> ${data.email}</p>
-        <p><strong>Project Type:</strong> ${data.projectType}</p>
-        <p><strong>Service:</strong> ${data.service}</p>
+        <p><strong>Project Type:</strong> ${data.projectType || "—"}</p>
+        <p><strong>Service:</strong> ${data.service || "—"}</p>
 
         <hr />
 
@@ -109,7 +116,7 @@ export async function POST(req: Request) {
     await mailerSend.email.send(adminEmail);
 
     /* -------------------------------
-       AUTO-REPLY TO LEAD
+       2️⃣ AUTO-REPLY TO LEAD
     -------------------------------- */
     const autoReply = new EmailParams()
       .setFrom(sentFrom)
@@ -118,7 +125,7 @@ export async function POST(req: Request) {
       .setHtml(`
         <h2>Thanks ${data.name}, we’ve got your request!</h2>
 
-        <p>We received your inquiry for a <strong>${data.service}</strong>.</p>
+        <p>We received your inquiry for a <strong>${data.service || "door project"}</strong>.</p>
 
         <p>A member of our team will contact you shortly to discuss pricing,
         availability, and next steps.</p>
@@ -139,7 +146,14 @@ export async function POST(req: Request) {
 
     await mailerSend.email.send(autoReply);
 
-    return NextResponse.json({ success: true });
+    /* -------------------------------
+       ✅ RETURN RESULT TO FRONTEND
+    -------------------------------- */
+    return NextResponse.json({
+      success: true,
+      score,
+      band,
+    });
   } catch (error) {
     console.error("Lead API Error:", error);
     return NextResponse.json(
