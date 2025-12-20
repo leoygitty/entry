@@ -137,7 +137,10 @@ export default function QuoteQuiz() {
         w-full max-w-md
 
         /* Mobile positioning */
-        fixed bottom-4 left-1/2 -translate-x-1/2 mt-24
+        md:static
+relative md:relative
+mt-6 sm:mt-8
+md:mt-0
 
         /* Desktop positioning */
         md:static md:mt-0 md:ml-auto md:mr-0 md:translate-x-0
