@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
 
-/* -------------------------------
+/* --------------------------------
    Lead Scoring Logic
 -------------------------------- */
 function scoreLead(data: {
@@ -40,14 +40,34 @@ function scoreLead(data: {
   return { score, band };
 }
 
-/* -------------------------------
+/* --------------------------------
    POST Handler
 -------------------------------- */
 export async function POST(req: Request) {
   try {
-    const data = await req.json();
+    const raw = await req.json();
 
-    // Basic validation
+    // Normalize input (critical for stability)
+    const data = {
+      name: String(raw.name || "").trim(),
+      phone: String(raw.phone || "").trim(),
+      email: String(raw.email || "").trim(),
+      projectType: raw.projectType || "",
+      service: raw.service || "",
+
+      // Tracking
+      utm_source: raw.utm_source || "",
+      utm_medium: raw.utm_medium || "",
+      utm_campaign: raw.utm_campaign || "",
+      utm_term: raw.utm_term || "",
+      utm_content: raw.utm_content || "",
+      gclid: raw.gclid || "",
+      fbclid: raw.fbclid || "",
+      page_url: raw.page_url || "",
+      referrer: raw.referrer || "",
+    };
+
+    // Hard validation
     if (!data.name || !data.phone || !data.email) {
       return NextResponse.json(
         { success: false, error: "Missing required fields" },
@@ -57,26 +77,27 @@ export async function POST(req: Request) {
 
     const { score, band } = scoreLead(data);
 
-    const mailerSend = new MailerSend({
-      apiKey: process.env.MAILERSEND_API_KEY!,
-    });
+    const apiKey = process.env.MAILERSEND_API_KEY;
+    if (!apiKey) {
+      throw new Error("MAILERSEND_API_KEY is not set");
+    }
+
+    const mailerSend = new MailerSend({ apiKey });
 
     const sentFrom = new Sender(
       process.env.MAIL_FROM_EMAIL || "leads@entrysolutionllc.com",
       process.env.MAIL_FROM_NAME || "Entry Solutions LLC"
     );
 
-    /* -------------------------------
+    /* --------------------------------
        1️⃣ ADMIN / INTERNAL EMAIL
     -------------------------------- */
-    const adminRecipients = [
-      new Recipient("entrysolutionllc@gmail.com", "Entry Solutions"),
-      new Recipient("tesoromanagements@gmail.com", "Tesoro Management"),
-    ];
-
     const adminEmail = new EmailParams()
       .setFrom(sentFrom)
-      .setTo(adminRecipients)
+      .setTo([
+        new Recipient("entrysolutionllc@gmail.com", "Entry Solutions"),
+        new Recipient("tesoromanagements@gmail.com", "Tesoro Management"),
+      ])
       .setSubject(
         `${band} Lead (${score}/100) — ${data.projectType || "Unknown"} / ${data.service || "Unknown"}`
       )
@@ -96,7 +117,7 @@ export async function POST(req: Request) {
 
         <hr />
 
-        <h4>📊 Tracking Data</h4>
+        <h4>📊 Tracking</h4>
         <p><strong>UTM Source:</strong> ${data.utm_source || "—"}</p>
         <p><strong>UTM Medium:</strong> ${data.utm_medium || "—"}</p>
         <p><strong>UTM Campaign:</strong> ${data.utm_campaign || "—"}</p>
@@ -115,7 +136,7 @@ export async function POST(req: Request) {
 
     await mailerSend.email.send(adminEmail);
 
-    /* -------------------------------
+    /* --------------------------------
        2️⃣ AUTO-REPLY TO LEAD
     -------------------------------- */
     const autoReply = new EmailParams()
@@ -146,8 +167,8 @@ export async function POST(req: Request) {
 
     await mailerSend.email.send(autoReply);
 
-    /* -------------------------------
-       ✅ RETURN RESULT TO FRONTEND
+    /* --------------------------------
+       ✅ RESPONSE
     -------------------------------- */
     return NextResponse.json({
       success: true,
