@@ -28,7 +28,7 @@ export default function Header() {
 
       if (currentY > lastScrollY && currentY > 120) {
         setHidden(true);
-        setMobileOpen(false); // 👈 sync mobile menu
+        setMobileOpen(false);
       }
 
       if (currentY < lastScrollY) {
@@ -66,10 +66,10 @@ export default function Header() {
             <Image
               src="/logo.png"
               alt="Entry Solutions LLC"
-              width={200}
-              height={30}
+              width={180}
+              height={28}
               priority
-              className="object-contain"
+              className="object-contain translate-y-[2px]"
             />
           </Link>
 
