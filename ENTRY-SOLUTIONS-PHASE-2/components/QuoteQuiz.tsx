@@ -64,27 +64,37 @@ export default function QuoteQuiz() {
      Submit Lead (SAFE async)
   ----------------------------------- */
   const submitLead = async () => {
-    try {
-      setSubmitting(true);
+  try {
+    setSubmitting(true);
 
-      const res = await fetch("/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+    const res = await fetch("/api/lead", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...form,
+        ...getTrackingParams(),
+        page_url: window.location.href,
+        referrer: document.referrer,
+      }),
+    });
 
-      if (!res.ok) throw new Error("Failed request");
+    const result = await res.json();
 
-      alert("Thank you! A team member will reach out shortly.");
-    } catch (err) {
-      console.error("Lead submission failed:", err);
-      alert("Something went wrong. Please try again.");
-    } finally {
-      setSubmitting(false);
+    if (!res.ok) {
+      console.error("API error:", result);
+      throw new Error(result.error || "Submission failed");
     }
-  };
 
-  return (
+    alert("Thank you! A team member will reach out shortly.");
+  } catch (err) {
+    console.error("Lead submission failed:", err);
+    alert("Something went wrong. Please try again.");
+  } finally {
+    setSubmitting(false);
+  }
+};
+
+   return (
     <div className="bg-white/95 backdrop-blur rounded-2xl p-6 shadow-xl w-full max-w-md">
 
       {/* HEADER */}
