@@ -64,7 +64,7 @@ export default function QuoteQuiz() {
   const back = () => setStep((s) => Math.max(s - 1, 0));
 
   /* -----------------------------------
-     Submit Lead (NO alert)
+     Submit Lead
   ----------------------------------- */
   const submitLead = async () => {
     try {
@@ -82,7 +82,6 @@ export default function QuoteQuiz() {
         throw new Error(result?.error || "Submission failed");
       }
 
-      // ✅ Redirect instead of alert
       router.push(
         `/thank-you?projectType=${encodeURIComponent(
           form.projectType
@@ -97,6 +96,16 @@ export default function QuoteQuiz() {
       setSubmitting(false);
     }
   };
+
+  const optionButtonClass = `
+    w-full border rounded-lg py-3
+    flex items-center justify-center gap-2
+    bg-white text-gray-900 font-medium
+    hover:bg-primary hover:text-white
+    active:scale-[0.98]
+    focus:outline-none focus:ring-2 focus:ring-primary
+    transition-all duration-200
+  `;
 
   return (
     <div className="bg-white/95 backdrop-blur rounded-2xl p-6 shadow-xl w-full max-w-md">
@@ -139,7 +148,7 @@ export default function QuoteQuiz() {
                 setForm((p) => ({ ...p, projectType: opt.label }));
                 next();
               }}
-              className="w-full border rounded-lg py-3 flex items-center justify-center gap-2 hover:bg-primary hover:text-white transition"
+              className={optionButtonClass}
             >
               <span className="text-xl">{opt.emoji}</span>
               {opt.label}
@@ -166,7 +175,7 @@ export default function QuoteQuiz() {
                 setForm((p) => ({ ...p, service: opt.label }));
                 next();
               }}
-              className="w-full border rounded-lg py-3 flex items-center justify-center gap-2 hover:bg-primary hover:text-white transition"
+              className={optionButtonClass}
             >
               <span className="text-xl">{opt.emoji}</span>
               {opt.label}
@@ -179,7 +188,7 @@ export default function QuoteQuiz() {
         </div>
       )}
 
-      {/* STEP 3 — URGENCY (conditional) */}
+      {/* STEP 3 — URGENCY */}
       {steps[step] === "Urgency" && (
         <div className="space-y-4 animate-fade-in">
           <h3 className="text-lg font-semibold text-primary">
@@ -197,7 +206,7 @@ export default function QuoteQuiz() {
                 setForm((p) => ({ ...p, urgency: opt.value }));
                 next();
               }}
-              className="w-full border rounded-lg py-3 flex items-center justify-center gap-2 hover:bg-primary hover:text-white transition"
+              className={optionButtonClass}
             >
               <span className="text-xl">{opt.emoji}</span>
               {opt.label}
