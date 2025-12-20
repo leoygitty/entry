@@ -13,9 +13,29 @@ export default function QuoteQuiz() {
     phone: "",
     email: "",
   });
+  const [submitting, setSubmitting] = useState(false);
 
   const next = () => setStep((s) => Math.min(s + 1, steps.length - 1));
   const back = () => setStep((s) => Math.max(s - 1, 0));
+
+  const submitLead = async () => {
+    try {
+      setSubmitting(true);
+
+      await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      alert("Thank you! A team member will reach out shortly.");
+    } catch (err) {
+      console.error("Lead submission failed:", err);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="bg-white/95 backdrop-blur rounded-2xl p-6 shadow-xl w-full max-w-md">
@@ -151,24 +171,17 @@ export default function QuoteQuiz() {
           </div>
 
           <button
+            disabled={submitting}
+            onClick={submitLead}
             className="
               w-full bg-gradient-to-r from-red-600 to-blue-700
               text-white rounded-lg py-3
               font-bold text-lg
               hover:opacity-90 transition
+              disabled:opacity-50
             "
-            onClick={() => {
-              console.log("QUIZ DATA:", form);
-              await fetch("/api/lead", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(form),
-});
-
-alert("Thank you! A team member will reach out shortly.");
-            }}
           >
-            🚀 Get My Free Quote
+            🚀 {submitting ? "Sending..." : "Get My Free Quote"}
           </button>
 
           <p className="text-xs text-gray-500 text-center">
