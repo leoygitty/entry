@@ -1,21 +1,12 @@
 import { NextResponse } from "next/server";
 import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
 
-/* -----------------------------------
-   Helpers
------------------------------------ */
-
-function formatTime(date: Date) {
-  return date.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-  });
-}
-
+/* -------------------------------
+   Lead Scoring Logic
+-------------------------------- */
 function scoreLead(data: {
   projectType?: string;
   service?: string;
-  name?: string;
   phone?: string;
   email?: string;
 }) {
@@ -32,24 +23,22 @@ function scoreLead(data: {
   if (service.includes("replacement")) score += 10;
   if (service.includes("custom")) score += 20;
 
-  const hasPhone = Boolean((data.phone || "").trim());
-  const hasEmail = Boolean((data.email || "").trim());
+  const hasPhone = Boolean(data.phone?.trim());
+  const hasEmail = Boolean(data.email?.trim());
 
   if (hasPhone && hasEmail) score += 20;
   if (!hasPhone) score -= 30;
 
   score = Math.max(0, Math.min(100, score));
 
-  const band =
-    score >= 80 ? "HOT 🔥" : score >= 50 ? "WARM ♨️" : "LOW ❄️";
+  const band = score >= 80 ? "🔥 HOT" : score >= 50 ? "♨️ WARM" : "❄️ LOW";
 
   return { score, band };
 }
 
-/* -----------------------------------
-   POST HANDLER
------------------------------------ */
-
+/* -------------------------------
+   POST Handler
+-------------------------------- */
 export async function POST(req: Request) {
   try {
     const data = await req.json();
@@ -61,8 +50,6 @@ export async function POST(req: Request) {
       );
     }
 
-    const receivedAt = new Date();
-    const respondBy = new Date(receivedAt.getTime() + 5 * 60 * 1000);
     const { score, band } = scoreLead(data);
 
     const mailerSend = new MailerSend({
@@ -74,10 +61,9 @@ export async function POST(req: Request) {
       process.env.MAIL_FROM_NAME || "Entry Solutions LLC"
     );
 
-    /* -----------------------------------
-       1️⃣ ADMIN / INTERNAL EMAIL
-    ----------------------------------- */
-
+    /* -------------------------------
+       ADMIN / INTERNAL EMAIL
+    -------------------------------- */
     const adminRecipients = [
       new Recipient("entrysolutionllc@gmail.com", "Entry Solutions"),
       new Recipient("tesoromanagements@gmail.com", "Tesoro Management"),
@@ -86,82 +72,67 @@ export async function POST(req: Request) {
     const adminEmail = new EmailParams()
       .setFrom(sentFrom)
       .setTo(adminRecipients)
-      .setSubject(
-        `${band} Lead (${score}) — RESPOND BY ${formatTime(respondBy)}`
-      )
+      .setSubject(`${band} Lead (${score}/100) — ${data.projectType} / ${data.service}`)
       .setHtml(`
-        <div style="
-          background:#dc2626;
-          color:white;
-          padding:12px;
-          font-size:16px;
-          font-weight:bold;
-          text-align:center;
-          border-radius:6px;
-        ">
-          ⏱️ SPEED-TO-LEAD TARGET: Respond by ${formatTime(respondBy)}
-        </div>
+        <h2>🚪 New Website Lead</h2>
 
-        <h2 style="margin-top:16px;">New Website Lead</h2>
-
-        <p><strong>Priority:</strong> ${band}</p>
-        <p><strong>Score:</strong> ${score}/100</p>
+        <p><strong>Lead Priority:</strong> ${band}</p>
+        <p><strong>Lead Score:</strong> ${score}/100</p>
 
         <hr />
 
-        <p><strong>Project Type:</strong> ${data.projectType || "—"}</p>
-        <p><strong>Service:</strong> ${data.service || "—"}</p>
         <p><strong>Name:</strong> ${data.name}</p>
         <p><strong>Phone:</strong> ${data.phone}</p>
         <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Project Type:</strong> ${data.projectType}</p>
+        <p><strong>Service:</strong> ${data.service}</p>
 
         <hr />
 
-        <p><strong>Lead Received:</strong> ${receivedAt.toLocaleString()}</p>
-        <p><strong>Respond By:</strong> ${respondBy.toLocaleString()}</p>
+        <h4>📊 Tracking Data</h4>
+        <p><strong>UTM Source:</strong> ${data.utm_source || "—"}</p>
+        <p><strong>UTM Medium:</strong> ${data.utm_medium || "—"}</p>
+        <p><strong>UTM Campaign:</strong> ${data.utm_campaign || "—"}</p>
+        <p><strong>UTM Term:</strong> ${data.utm_term || "—"}</p>
+        <p><strong>UTM Content:</strong> ${data.utm_content || "—"}</p>
+        <p><strong>GCLID:</strong> ${data.gclid || "—"}</p>
+        <p><strong>FBCLID:</strong> ${data.fbclid || "—"}</p>
 
-        <p style="color:#666;">
-          Submitted from the Entry Solutions website.
-        </p>
+        <p><strong>Page URL:</strong> ${data.page_url || "—"}</p>
+        <p><strong>Referrer:</strong> ${data.referrer || "—"}</p>
+
+        <hr />
+
+        <p>Submitted from EntrySolutionsLLC.com</p>
       `);
 
     await mailerSend.email.send(adminEmail);
 
-    /* -----------------------------------
-       2️⃣ AUTO-REPLY TO LEAD
-    ----------------------------------- */
-
+    /* -------------------------------
+       AUTO-REPLY TO LEAD
+    -------------------------------- */
     const autoReply = new EmailParams()
       .setFrom(sentFrom)
       .setTo([new Recipient(data.email, data.name)])
       .setSubject("✅ We Received Your Request — Entry Solutions LLC")
       .setHtml(`
-        <h2>Thanks for reaching out, ${data.name}!</h2>
+        <h2>Thanks ${data.name}, we’ve got your request!</h2>
 
-        <p>
-          We’ve received your request for a
-          <strong>${data.service || "door project"}</strong>.
-        </p>
+        <p>We received your inquiry for a <strong>${data.service}</strong>.</p>
 
-        <p>
-          A member of our team will be calling or texting you shortly
-          to discuss your project and next steps.
-        </p>
+        <p>A member of our team will contact you shortly to discuss pricing,
+        availability, and next steps.</p>
 
-        <p><strong>What happens next?</strong></p>
+        <h4>What happens next?</h4>
         <ul>
-          <li>📞 Quick call to confirm details</li>
-          <li>📐 Accurate measurements if needed</li>
-          <li>💰 Clear, no-pressure pricing</li>
+          <li>📞 Quick phone call</li>
+          <li>📐 Measurements if needed</li>
+          <li>💰 Clear, upfront pricing</li>
         </ul>
 
-        <p>
-          Need immediate help? Call us directly:
-        </p>
+        <p>If you need immediate assistance, call us at:</p>
 
-        <p style="font-size:18px;">
-          <strong>(267) 945-2247</strong>
-        </p>
+        <p style="font-size:18px;"><strong>(267) 945-2247</strong></p>
 
         <p>— Entry Solutions LLC</p>
       `);
@@ -170,9 +141,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("MailerSend Error:", error);
+    console.error("Lead API Error:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to send lead" },
+      { success: false, error: "Failed to process lead" },
       { status: 500 }
     );
   }
