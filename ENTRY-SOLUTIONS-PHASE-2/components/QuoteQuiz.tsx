@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 /* -----------------------------------
@@ -31,9 +31,11 @@ const BASE_STEPS = ["Project", "Service", "Urgency", "Contact"];
 
 export default function QuoteQuiz() {
   const router = useRouter();
+  const quizRef = useRef<HTMLDivElement | null>(null);
 
   const [step, setStep] = useState(0);
   const [submitting, setSubmitting] = useState(false);
+  const [isSticky, setIsSticky] = useState(false);
 
   const [form, setForm] = useState({
     projectType: "",
@@ -47,6 +49,28 @@ export default function QuoteQuiz() {
 
   useEffect(() => {
     setForm((prev) => ({ ...prev, ...getTrackingParams() }));
+  }, []);
+
+  /* -----------------------------------
+     HERO DIM + STICKY OBSERVER
+  ----------------------------------- */
+  useEffect(() => {
+    const hero = document.querySelector("[data-hero]");
+    if (!quizRef.current || !hero) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const visible = entry.isIntersecting;
+        hero.classList.toggle("brightness-75", visible);
+        hero.classList.toggle("transition-all", true);
+        hero.classList.toggle("duration-500", true);
+        setIsSticky(!visible);
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(quizRef.current);
+    return () => observer.disconnect();
   }, []);
 
   const steps =
@@ -105,7 +129,17 @@ export default function QuoteQuiz() {
     "text-[17px] font-semibold tracking-tight text-gray-900";
 
   return (
-    <div className="bg-white/98 backdrop-blur-xl rounded-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.18)] w-full max-w-md">
+    <div
+      ref={quizRef}
+      className={`
+        bg-white/98 backdrop-blur-xl rounded-2xl p-6
+        shadow-[0_20px_60px_rgba(0,0,0,0.18)]
+        w-full max-w-md
+        md:static
+        fixed md:bottom-auto bottom-4 left-1/2 -translate-x-1/2
+        ${isSticky ? "z-40" : ""}
+      `}
+    >
       {/* HEADER */}
       <h2 className="text-[22px] font-semibold tracking-tight text-gray-900 mb-1">
         Get a Free Quote
@@ -130,9 +164,7 @@ export default function QuoteQuiz() {
       {/* STEP 1 */}
       {steps[step] === "Project" && (
         <div className="space-y-4 animate-fade-in">
-          <h3 className={questionClass}>
-            🏠 What type of project is this?
-          </h3>
+          <h3 className={questionClass}>🏠 What type of project is this?</h3>
 
           {[
             { label: "Residential", emoji: "🏡" },
@@ -157,9 +189,7 @@ export default function QuoteQuiz() {
       {/* STEP 2 */}
       {steps[step] === "Service" && (
         <div className="space-y-4 animate-fade-in">
-          <h3 className={questionClass}>
-            🔧 What service do you need?
-          </h3>
+          <h3 className={questionClass}>🔧 What service do you need?</h3>
 
           {[
             { label: "Door Installation", emoji: "🚪" },
@@ -188,9 +218,7 @@ export default function QuoteQuiz() {
       {/* STEP 3 */}
       {steps[step] === "Urgency" && (
         <div className="space-y-4 animate-fade-in">
-          <h3 className={questionClass}>
-            ⏱️ How soon do you need this done?
-          </h3>
+          <h3 className={questionClass}>⏱️ How soon do you need this done?</h3>
 
           {[
             { label: "ASAP / Emergency", value: "ASAP", emoji: "⚡" },
@@ -219,9 +247,7 @@ export default function QuoteQuiz() {
       {/* STEP 4 */}
       {steps[step] === "Contact" && (
         <div className="space-y-4 animate-fade-in">
-          <h3 className={questionClass}>
-            📞 Where should we send your quote?
-          </h3>
+          <h3 className={questionClass}>📞 Where should we send your quote?</h3>
 
           <p className="text-sm text-gray-600">
             {form.urgency === "ASAP"
