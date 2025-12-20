@@ -159,7 +159,13 @@ export default function QuoteQuiz() {
             "
             onClick={() => {
               console.log("QUIZ DATA:", form);
-              alert("Thank you! A team member will reach out shortly.");
+              await fetch("/api/lead", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(form),
+});
+
+alert("Thank you! A team member will reach out shortly.");
             }}
           >
             🚀 Get My Free Quote
