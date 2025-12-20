@@ -14,23 +14,25 @@ export default function Hero() {
       <div
         className="
           relative container mx-auto px-6
-          py-16 md:py-24
+          py-12 md:py-24
           grid grid-cols-1 lg:grid-cols-2
-          gap-16 items-center
+          gap-10 lg:gap-16
+          items-start lg:items-center
         "
       >
         {/* LEFT COPY */}
         <div className="animate-fade-in">
-          <p className="uppercase tracking-widest text-sm text-white/70 mb-4">
+          <p className="uppercase tracking-widest text-xs sm:text-sm text-white/70 mb-3">
             Professional Door Installation
           </p>
 
           <h1
             className="
-              text-[2.25rem] leading-[1.1]
-              sm:text-4xl
-              md:text-5xl
-              font-bold mb-4
+              text-[1.75rem] leading-tight
+              sm:text-3xl
+              md:text-4xl
+              lg:text-5xl
+              font-bold mb-3
             "
           >
             Door Installations Done Right
@@ -40,11 +42,12 @@ export default function Hero() {
 
           <p
             className="
-              text-base
-              sm:text-lg
+              text-sm
+              sm:text-base
+              md:text-lg
               text-white/85
               max-w-xl
-              mb-6
+              mb-5
             "
           >
             High-quality door installations that improve security,
@@ -52,7 +55,7 @@ export default function Hero() {
             precision and care.
           </p>
 
-          {/* Explicit white lock (desktop + mobile) */}
+          {/* Bullet points */}
           <ul className="space-y-2 text-white/90 text-sm sm:text-base">
             <li className="flex items-start gap-2">
               <span className="text-white">✔</span>
@@ -69,8 +72,8 @@ export default function Hero() {
           </ul>
         </div>
 
-        {/* RIGHT: QUIZ CARD (micro delay for visual flow) */}
-        <div className="animate-fade-in [animation-delay:80ms]">
+        {/* QUIZ — below copy on mobile, unchanged on desktop */}
+        <div className="animate-fade-in [animation-delay:80ms] mt-6 lg:mt-0">
           <QuoteQuiz />
         </div>
       </div>
