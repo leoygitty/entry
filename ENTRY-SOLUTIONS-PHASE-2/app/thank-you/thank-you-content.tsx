@@ -62,15 +62,15 @@ export default function ThankYouContent() {
           </p>
 
           <button
-            onClick={() => {
-              window.Calendly?.initPopupWidget({
-                url: "https://calendly.com/YOUR_CALENDLY_LINK",
-              });
-            }}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:opacity-90 transition"
-          >
-            📅 Book a Call Now
-          </button>
+  onClick={() => {
+    window.Calendly?.initPopupWidget({
+      url: "https://calendly.com/tesoromanagements/custom-door-consultation",
+    });
+  }}
+  className="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:opacity-90 transition"
+>
+  📅 Book Your Custom Door Consultation
+</button>
         </div>
       )}
 
