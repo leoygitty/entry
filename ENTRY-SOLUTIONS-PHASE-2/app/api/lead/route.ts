@@ -1,74 +1,46 @@
-import { Resend } from "resend";
 import { NextResponse } from "next/server";
+import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
 
 export async function POST(req: Request) {
   try {
     const data = await req.json();
 
-    const resend = new Resend(process.env.RESEND_API_KEY);
+    const mailerSend = new MailerSend({
+      apiKey: process.env.MAILERSEND_API_KEY!,
+    });
 
-    /* ============================
-       1️⃣ INTERNAL LEAD NOTIFICATION
-    ============================ */
-    await resend.emails.send({
-      from: "Entry Solutions <leads@entrysolutionsllc.com>",
-      to: [
-        "entrysolutionllc@gmail.com",
-        "tesoromanagements@gmail.com",
-      ],
-      subject: "🚪 New Door Installation Lead",
-      html: `
-        <h2>New Lead Received</h2>
-        <p><strong>Name:</strong> ${data.name}</p>
-        <p><strong>Email:</strong> ${data.email}</p>
-        <p><strong>Phone:</strong> ${data.phone}</p>
+    const sentFrom = new Sender(
+      process.env.MAIL_FROM_EMAIL!,
+      process.env.MAIL_FROM_NAME || "Entry Solutions LLC"
+    );
+
+    const recipients = [
+      new Recipient("entrysolutionllc@gmail.com", "Entry Solutions"),
+      new Recipient("tesoromanagements@gmail.com", "Tesoro Management"),
+    ];
+
+    const emailParams = new EmailParams()
+      .setFrom(sentFrom)
+      .setTo(recipients)
+      .setSubject("🚪 New Door Installation Lead")
+      .setHtml(`
+        <h2>New Website Lead</h2>
         <p><strong>Project Type:</strong> ${data.projectType}</p>
         <p><strong>Service:</strong> ${data.service}</p>
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Phone:</strong> ${data.phone}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
         <hr />
-        <p>Submitted from Entry Solutions website</p>
-      `,
-    });
+        <p>This lead was submitted from the Entry Solutions website.</p>
+      `);
 
-    /* ============================
-       2️⃣ CUSTOMER AUTO-REPLY EMAIL
-    ============================ */
-    await resend.emails.send({
-      from: "Entry Solutions <hello@entrysolutionsllc.com>",
-      to: data.email,
-      subject: "We Received Your Request — Entry Solutions LLC",
-      html: `
-        <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-          <h2>Thanks for reaching out, ${data.name}!</h2>
-
-          <p>
-            We’ve received your request for a <strong>${data.service}</strong> project.
-            A member of our team will review your details and reach out shortly.
-          </p>
-
-          <p>
-            If you’d like immediate assistance, feel free to call us directly:
-          </p>
-
-          <p style="font-size: 18px; font-weight: bold;">
-            📞 (267) 945-2247
-          </p>
-
-          <hr />
-
-          <p style="font-size: 14px; color: #555;">
-            Entry Solutions LLC<br />
-            Professional Door Installation & Custom Projects
-          </p>
-        </div>
-      `,
-    });
+    await mailerSend.email.send(emailParams);
 
     return NextResponse.json({ success: true });
-
   } catch (error) {
-    console.error("Lead submission error:", error);
+    console.error("MailerSend Error:", error);
     return NextResponse.json(
-      { error: "Failed to send lead" },
+      { success: false, error: "Failed to send lead" },
       { status: 500 }
     );
   }
