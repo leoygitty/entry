@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 /* -----------------------------------
    Tracking Helpers
@@ -29,6 +30,8 @@ const getTrackingParams = () => {
 const BASE_STEPS = ["Project", "Service", "Urgency", "Contact"];
 
 export default function QuoteQuiz() {
+  const router = useRouter();
+
   const [step, setStep] = useState(0);
   const [submitting, setSubmitting] = useState(false);
 
@@ -61,7 +64,7 @@ export default function QuoteQuiz() {
   const back = () => setStep((s) => Math.max(s - 1, 0));
 
   /* -----------------------------------
-     Submit Lead
+     Submit Lead (NO alert)
   ----------------------------------- */
   const submitLead = async () => {
     try {
@@ -73,11 +76,22 @@ export default function QuoteQuiz() {
         body: JSON.stringify(form),
       });
 
-      if (!res.ok) throw new Error("Submission failed");
+      const result = await res.json();
 
-      alert("Thank you! A team member will reach out shortly.");
+      if (!res.ok) {
+        throw new Error(result?.error || "Submission failed");
+      }
+
+      // ✅ Redirect instead of alert
+      router.push(
+        `/thank-you?projectType=${encodeURIComponent(
+          form.projectType
+        )}&service=${encodeURIComponent(
+          form.service
+        )}&urgency=${encodeURIComponent(form.urgency || "N/A")}`
+      );
     } catch (err) {
-      console.error(err);
+      console.error("Lead submission failed:", err);
       alert("Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
@@ -87,7 +101,9 @@ export default function QuoteQuiz() {
   return (
     <div className="bg-white/95 backdrop-blur rounded-2xl p-6 shadow-xl w-full max-w-md">
       {/* HEADER */}
-      <h2 className="text-2xl font-bold text-primary mb-1">Get a Free Quote</h2>
+      <h2 className="text-2xl font-bold text-primary mb-1">
+        Get a Free Quote
+      </h2>
       <p className="text-sm text-gray-600 mb-4">
         Step {step + 1} of {steps.length} • Takes under 30 seconds ⏱️
       </p>
@@ -105,7 +121,7 @@ export default function QuoteQuiz() {
         </p>
       </div>
 
-      {/* STEP 1 — PROJECT TYPE */}
+      {/* STEP 1 — PROJECT */}
       {steps[step] === "Project" && (
         <div className="space-y-4 animate-fade-in">
           <h3 className="text-lg font-semibold text-primary">
@@ -207,7 +223,7 @@ export default function QuoteQuiz() {
               : "We’ll reach out shortly with next steps."}
           </p>
 
-          {["name", "phone", "email"].map((field, i) => (
+          {["name", "phone", "email"].map((field) => (
             <input
               key={field}
               placeholder={
