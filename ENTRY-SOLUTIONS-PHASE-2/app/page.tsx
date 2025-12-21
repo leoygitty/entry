@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Hero from "@/components/Hero";
 import TrustIndicators from "@/components/TrustIndicators";
+import EfficiencyInsightCard from "@/components/EfficiencyInsightCard";
 import ServicesOverview from "@/components/ServicesOverview";
 import Testimonials from "@/components/Testimonials";
 import VideoWithOverlay from "@/components/VideoWithOverlay";
@@ -39,6 +40,9 @@ export default function Home() {
 
       {/* TRUST */}
       <TrustIndicators />
+
+      {/* ENERGY EFFICIENCY INSIGHT */}
+      <EfficiencyInsightCard />
 
       {/* SERVICES */}
       <ServicesOverview />
@@ -155,58 +159,4 @@ export default function Home() {
                 >
                   <img
                     src={src}
-                    alt={`Door installation ${i + 1}`}
-                    className="w-full h-[420px] object-cover"
-                  />
-                </div>
-              ))}
-            </div>
-
-            <div className="pointer-events-none absolute top-0 left-0 h-full w-24 bg-gradient-to-r from-white to-transparent" />
-            <div className="pointer-events-none absolute top-0 right-0 h-full w-24 bg-gradient-to-l from-white to-transparent" />
-          </div>
-
-          <p className="mt-6 text-sm text-gray-400 text-center">
-            ← Swipe to explore more projects →
-          </p>
-
-        </div>
-      </section>
-
-      {/* TESTIMONIALS */}
-      <Testimonials />
-
-      {/* BRAND POWER SECTION */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-900 to-red-900 opacity-95" />
-
-        <div className="relative max-w-5xl mx-auto px-6 text-center text-white">
-          <h2 className="text-4xl font-bold mb-4">
-            Ready to Upgrade Your Entryway?
-          </h2>
-
-          <p className="text-lg opacity-90 max-w-2xl mx-auto mb-8">
-            Professional installation. Premium materials. Zero shortcuts.
-          </p>
-
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <a
-              href="#quote"
-              className="bg-white text-blue-900 font-semibold px-8 py-4 rounded-lg shadow-lg hover:scale-105 transition"
-            >
-              Get Free Quote
-            </a>
-
-            <a
-              href="tel:2679452247"
-              className="border border-white/50 text-white px-8 py-4 rounded-lg hover:bg-white hover:text-blue-900 transition"
-            >
-              Call (267) 945-2247
-            </a>
-          </div>
-        </div>
-      </section>
-
-    </main>
-  );
-}
+                    alt={`Door
