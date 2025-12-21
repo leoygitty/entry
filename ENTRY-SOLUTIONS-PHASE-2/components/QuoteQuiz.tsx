@@ -183,7 +183,7 @@ md:mt-0
     </h3>
 
          {[
-  { label: "Residential", icon: "house" },
+  { label: "Residential", type: "svg" },
   { label: "Commercial", emoji: "🏢" },
   { label: "Custom", emoji: "✨" },
 ].map((opt) => (
@@ -207,7 +207,7 @@ md:mt-0
         opt.emoji
       )}
     </span>
-    {opt.label}
+    <span>{opt.label}</span>
   </button>
 ))}
 
