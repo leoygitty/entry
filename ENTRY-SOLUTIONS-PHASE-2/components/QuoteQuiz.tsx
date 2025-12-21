@@ -84,17 +84,14 @@ export default function QuoteQuiz() {
   const calculateLeadScore = () => {
     let score = 0;
 
-    // Project type
     if (form.projectType === "Residential") score += 20;
     if (form.projectType === "Commercial") score += 30;
     if (form.projectType === "Custom") score += 40;
 
-    // Service type
     if (form.service === "Door Installation") score += 20;
     if (form.service === "Door Replacement") score += 15;
     if (form.service === "Custom Door Project") score += 30;
 
-    // Urgency
     if (form.urgency === "ASAP") score += 40;
     if (form.urgency === "Soon") score += 25;
     if (form.urgency === "Planning") score += 10;
@@ -188,7 +185,7 @@ export default function QuoteQuiz() {
         </div>
       </div>
 
-      {/* STEP 1 */}
+      {/* STEP 1 — RESTORED CUSTOM ICON VERSION */}
       {steps[step] === "Project" && (
         <div className="space-y-4 animate-fade-in">
           <h3 className={`${questionClass} flex items-center gap-3`}>
@@ -210,7 +207,31 @@ export default function QuoteQuiz() {
                 next();
               }}
             >
-              {label}
+              <span className="text-xl flex items-center justify-center">
+                {label === "Residential" ? (
+                  <img
+                    src="/icons/project-house.svg"
+                    alt=""
+                    aria-hidden
+                    className="h-[24px] w-[24px]"
+                  />
+                ) : label === "Commercial" ? (
+                  <img
+                    src="/icons/project-commercial.svg"
+                    alt=""
+                    aria-hidden
+                    className="h-[24px] w-[24px]"
+                  />
+                ) : (
+                  <img
+                    src="/icons/project-custom.svg"
+                    alt=""
+                    aria-hidden
+                    className="h-[24px] w-[24px]"
+                  />
+                )}
+              </span>
+              <span>{label}</span>
             </button>
           ))}
         </div>
