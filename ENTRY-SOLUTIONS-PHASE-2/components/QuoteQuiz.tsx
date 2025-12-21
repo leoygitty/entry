@@ -169,10 +169,18 @@ md:mt-0
         </p>
       </div>
 
-      {/* STEP 1 */}
-      {steps[step] === "Project" && (
-        <div className="space-y-4 animate-fade-in">
-          <h3 className={questionClass}>🏠 What type of project is this?</h3>
+    {/* STEP 1 */}
+{steps[step] === "Project" && (
+  <div className="space-y-4 animate-fade-in">
+    <h3 className={`${questionClass} flex items-center gap-2`}>
+      <img
+        src="/icons/project-house.svg"
+        alt=""
+        aria-hidden="true"
+        className="h-[18px] w-[18px] translate-y-[1px]"
+      />
+      What type of project is this?
+    </h3>
 
           {[
             { label: "Residential", emoji: "🏡" },
