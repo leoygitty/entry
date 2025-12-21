@@ -12,8 +12,6 @@ const getTrackingParams = () => {
 
   const params = new URLSearchParams(window.location.search);
 
-  // DEBUG: no orphan ternaries below
-
   return {
     utm_source: params.get("utm_source"),
     utm_medium: params.get("utm_medium"),
@@ -80,26 +78,53 @@ export default function QuoteQuiz() {
   const next = () => setStep((s) => Math.min(s + 1, steps.length - 1));
   const back = () => setStep((s) => Math.max(s - 1, 0));
 
+  /* -----------------------------------
+     Lead Scoring + Emoji Rating
+  ----------------------------------- */
+  const calculateLeadScore = () => {
+    let score = 0;
+
+    // Project type
+    if (form.projectType === "Residential") score += 20;
+    if (form.projectType === "Commercial") score += 30;
+    if (form.projectType === "Custom") score += 40;
+
+    // Service type
+    if (form.service === "Door Installation") score += 20;
+    if (form.service === "Door Replacement") score += 15;
+    if (form.service === "Custom Door Project") score += 30;
+
+    // Urgency
+    if (form.urgency === "ASAP") score += 40;
+    if (form.urgency === "Soon") score += 25;
+    if (form.urgency === "Planning") score += 10;
+
+    let ratingEmoji = "❄️ COLD";
+    if (score >= 80) ratingEmoji = "🔥 HOT";
+    else if (score >= 50) ratingEmoji = "⚡ WARM";
+
+    return { score, ratingEmoji };
+  };
+
   const submitLead = async () => {
     try {
       setSubmitting(true);
 
+      const { score, ratingEmoji } = calculateLeadScore();
+
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          leadScore: score,
+          leadRating: ratingEmoji,
+        }),
       });
 
-      const result = await res.json();
-      if (!res.ok) throw new Error(result?.error || "Submission failed");
+      if (!res.ok) throw new Error("Submission failed");
 
-      router.push(
-        `/thank-you?projectType=${encodeURIComponent(
-          form.projectType
-        )}&service=${encodeURIComponent(
-          form.service
-        )}&urgency=${encodeURIComponent(form.urgency || "N/A")}`
-      );
+      router.push("/thank-you");
     } catch (err) {
       console.error(err);
       alert("Something went wrong. Please try again.");
@@ -142,21 +167,16 @@ export default function QuoteQuiz() {
       <h2 className="text-[22px] font-semibold tracking-tight text-gray-900 mb-1">
         Get a Free Quote
       </h2>
+
       <p className="text-sm text-gray-500 mb-3">
         Step {step + 1} of {steps.length} • Takes under 30 seconds ⏱️
       </p>
 
-      {/* 🔴🔵 LIQUID PROGRESS BAR */}
+      {/* PROGRESS BAR */}
       <div className="mb-4">
         <div className="relative w-full bg-gray-200/60 rounded-full overflow-hidden">
           <div
-            className={`
-              ${barHeight}
-              bg-gradient-to-r from-red-600 to-blue-700
-              rounded-full
-              transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)]
-              blur-[0.2px]
-            `}
+            className={`${barHeight} bg-gradient-to-r from-red-600 to-blue-700 rounded-full transition-all duration-700`}
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -164,55 +184,19 @@ export default function QuoteQuiz() {
 
       {/* STEP 1 */}
       {steps[step] === "Project" && (
-        <div className="space-y-4 animate-fade-in">
-          <h3 className={`${questionClass} flex items-center gap-3`}>
-            <img
-              src="/logo.png"
-              alt=""
-              aria-hidden
-              className="h-[52px] w-[78px]"
-            />
-            What type of project is this?
-          </h3>
+        <div className="space-y-4">
+          <h3 className={questionClass}>What type of project is this?</h3>
 
-          {[
-            { label: "Residential" },
-            { label: "Commercial" },
-            { label: "Custom" },
-          ].map((opt) => (
+          {["Residential", "Commercial", "Custom"].map((label) => (
             <button
-              key={opt.label}
+              key={label}
               className={optionButtonClass}
               onClick={() => {
-                setForm((p) => ({ ...p, projectType: opt.label }));
+                setForm((p) => ({ ...p, projectType: label }));
                 next();
               }}
             >
-              <span className="text-xl flex items-center justify-center">
-                {opt.label === "Residential" ? (
-                  <img
-                    src="/icons/project-house.svg"
-                    alt=""
-                    aria-hidden
-                    className="h-[24px] w-[24px]"
-                  />
-                ) : opt.label === "Commercial" ? (
-                  <img
-                    src="/icons/project-commercial.svg"
-                    alt=""
-                    aria-hidden
-                    className="h-[24px] w-[24px]"
-                  />
-                ) : (
-                  <img
-                    src="/icons/project-custom.svg"
-                    alt=""
-                    aria-hidden
-                    className="h-[24px] w-[24px]"
-                  />
-                )}
-              </span>
-              <span>{opt.label}</span>
+              {label}
             </button>
           ))}
         </div>
@@ -220,30 +204,26 @@ export default function QuoteQuiz() {
 
       {/* STEP 2 */}
       {steps[step] === "Service" && (
-        <div className="space-y-4 animate-fade-in">
+        <div className="space-y-4">
           <h3 className={questionClass}>🔧 What service do you need?</h3>
 
           {[
-            { label: "Door Installation" },
-            { label: "Door Replacement", emoji: "♻️" },
-            { label: "Custom Door Project", emoji: "🛠️" },
-          ].map((opt) => (
+            "Door Installation",
+            "Door Replacement",
+            "Custom Door Project",
+          ].map((label) => (
             <button
-              key={opt.label}
+              key={label}
               className={optionButtonClass}
               onClick={() => {
-                setForm((p) => ({ ...p, service: opt.label }));
+                setForm((p) => ({ ...p, service: label }));
                 next();
               }}
             >
-              <span className="text-xl flex items-center justify-center">
-                {opt.label === "Door Installation" ? (
-                  <DoorIcon className="h-[22px] w-[22px] translate-y-[1px]" />
-                ) : (
-                  opt.emoji
-                )}
-              </span>
-              <span>{opt.label}</span>
+              {label === "Door Installation" ? (
+                <DoorIcon className="w-5 h-5" />
+              ) : null}
+              {label}
             </button>
           ))}
 
@@ -255,7 +235,7 @@ export default function QuoteQuiz() {
 
       {/* STEP 3 */}
       {steps[step] === "Urgency" && (
-        <div className="space-y-4 animate-fade-in">
+        <div className="space-y-4">
           <h3 className={questionClass}>⏱️ How soon do you need this done?</h3>
 
           {[
@@ -284,7 +264,7 @@ export default function QuoteQuiz() {
 
       {/* STEP 4 */}
       {steps[step] === "Contact" && (
-        <div className="space-y-4 animate-fade-in">
+        <div className="space-y-4">
           <h3 className={questionClass}>📞 Where should we send your quote?</h3>
 
           {["name", "phone", "email"].map((field) => (
@@ -308,7 +288,7 @@ export default function QuoteQuiz() {
           <button
             disabled={submitting}
             onClick={submitLead}
-            className="w-full bg-gradient-to-r from-red-600 to-blue-700 text-white rounded-xl py-3 font-semibold text-lg"
+            className="w-full bg-gradient-to-r from-red-600 to-blue-700 text-white rounded-xl py-3 font-semibold"
           >
             {submitting ? "Sending..." : "Get My Free Quote"}
           </button>
