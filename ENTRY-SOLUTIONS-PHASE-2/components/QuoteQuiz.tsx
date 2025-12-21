@@ -12,6 +12,8 @@ const getTrackingParams = () => {
 
   const params = new URLSearchParams(window.location.search);
 
+  // DEBUG: no orphan ternaries below
+
   return {
     utm_source: params.get("utm_source"),
     utm_medium: params.get("utm_medium"),
@@ -103,7 +105,17 @@ export default function QuoteQuiz() {
     return { score, ratingEmoji };
   };
 
+  /* -----------------------------------
+     Required-field Validation (Step 4)
+  ----------------------------------- */
+  const isContactValid =
+    form.name.trim().length > 0 &&
+    form.phone.replace(/\D/g, "").length >= 10 &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
+
   const submitLead = async () => {
+    if (!isContactValid) return;
+
     try {
       setSubmitting(true);
 
@@ -119,7 +131,8 @@ export default function QuoteQuiz() {
         }),
       });
 
-      if (!res.ok) throw new Error("Submission failed");
+      const result = await res.json();
+      if (!res.ok) throw new Error(result?.error || "Submission failed");
 
       router.push(
         `/thank-you?projectType=${encodeURIComponent(
@@ -185,7 +198,7 @@ export default function QuoteQuiz() {
         </div>
       </div>
 
-      {/* STEP 1 — RESTORED CUSTOM ICON VERSION */}
+      {/* STEP 1 */}
       {steps[step] === "Project" && (
         <div className="space-y-4 animate-fade-in">
           <h3 className={`${questionClass} flex items-center gap-3`}>
@@ -198,24 +211,28 @@ export default function QuoteQuiz() {
             What type of project is this?
           </h3>
 
-          {["Residential", "Commercial", "Custom"].map((label) => (
+          {[
+            { label: "Residential" },
+            { label: "Commercial" },
+            { label: "Custom" },
+          ].map((opt) => (
             <button
-              key={label}
+              key={opt.label}
               className={optionButtonClass}
               onClick={() => {
-                setForm((p) => ({ ...p, projectType: label }));
+                setForm((p) => ({ ...p, projectType: opt.label }));
                 next();
               }}
             >
               <span className="text-xl flex items-center justify-center">
-                {label === "Residential" ? (
+                {opt.label === "Residential" ? (
                   <img
                     src="/icons/project-house.svg"
                     alt=""
                     aria-hidden
                     className="h-[24px] w-[24px]"
                   />
-                ) : label === "Commercial" ? (
+                ) : opt.label === "Commercial" ? (
                   <img
                     src="/icons/project-commercial.svg"
                     alt=""
@@ -231,7 +248,7 @@ export default function QuoteQuiz() {
                   />
                 )}
               </span>
-              <span>{label}</span>
+              <span>{opt.label}</span>
             </button>
           ))}
         </div>
@@ -325,9 +342,12 @@ export default function QuoteQuiz() {
           ))}
 
           <button
-            disabled={submitting}
+            disabled={submitting || !isContactValid}
             onClick={submitLead}
-            className="w-full bg-gradient-to-r from-red-600 to-blue-700 text-white rounded-xl py-3 font-semibold text-lg"
+            className={`
+              w-full bg-gradient-to-r from-red-600 to-blue-700 text-white rounded-xl py-3 font-semibold text-lg
+              ${submitting || !isContactValid ? "opacity-50 cursor-not-allowed" : ""}
+            `}
           >
             {submitting ? "Sending..." : "Get My Free Quote"}
           </button>
