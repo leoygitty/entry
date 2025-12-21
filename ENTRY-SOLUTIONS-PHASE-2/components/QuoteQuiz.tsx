@@ -320,7 +320,7 @@ export default function QuoteQuiz() {
               onChange={(e) =>
                 setForm((p) => ({ ...p, [field]: e.target.value }))
               }
-              className="w-full rounded-xl border border-gray-200 p-3"
+              className="w-full rounded-xl border border-gray-200 p-3 bg-white text-gray-900 placeholder-gray-400"
             />
           ))}
 
