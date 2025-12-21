@@ -24,7 +24,7 @@ export default function RootLayout({
                 var cr = document.createElement("script");
                 cr.type = "text/javascript";
                 cr.async = true;
-                cr.src = <script type="text/javascript" src="//cdn.callrail.com/companies/554986649/e2933efaed1eccbd3c90/12/swap.js"></script> ;
+                cr.src = "//cdn.callrail.com/companies/554986649/e2933efaed1eccbd3c90/12/swap.js";
                 var s = document.getElementsByTagName("script")[0];
                 s.parentNode.insertBefore(cr, s);
               })();
