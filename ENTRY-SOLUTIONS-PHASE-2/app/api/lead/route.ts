@@ -7,6 +7,7 @@ import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
 function scoreLead(data: {
   projectType?: string;
   service?: string;
+  urgency?: string;
   phone?: string;
   email?: string;
 }) {
@@ -14,6 +15,7 @@ function scoreLead(data: {
 
   const projectType = (data.projectType || "").toLowerCase();
   const service = (data.service || "").toLowerCase();
+  const urgency = (data.urgency || "").toLowerCase();
 
   // Project type weighting
   if (projectType.includes("custom")) score += 40;
@@ -24,6 +26,11 @@ function scoreLead(data: {
   if (service.includes("installation")) score += 15;
   if (service.includes("replacement")) score += 10;
   if (service.includes("custom")) score += 20;
+
+  // Urgency weighting (🔥 IMPORTANT)
+  if (urgency.includes("asap")) score += 30;
+  else if (urgency.includes("soon")) score += 15;
+  else if (urgency.includes("planning")) score += 5;
 
   // Contact completeness
   const hasPhone = Boolean(data.phone?.trim());
@@ -54,17 +61,18 @@ export async function POST(req: Request) {
       email: String(raw.email || "").trim(),
       projectType: raw.projectType || "",
       service: raw.service || "",
+      urgency: raw.urgency || "",
 
-      // Tracking
-      utm_source: raw.utm_source || "",
-      utm_medium: raw.utm_medium || "",
-      utm_campaign: raw.utm_campaign || "",
-      utm_term: raw.utm_term || "",
-      utm_content: raw.utm_content || "",
-      gclid: raw.gclid || "",
-      fbclid: raw.fbclid || "",
-      page_url: raw.page_url || "",
-      referrer: raw.referrer || "",
+      // Tracking (NEVER EMPTY)
+      utm_source: raw.utm_source || "direct",
+      utm_medium: raw.utm_medium || "none",
+      utm_campaign: raw.utm_campaign || "organic",
+      utm_term: raw.utm_term || "n/a",
+      utm_content: raw.utm_content || "n/a",
+      gclid: raw.gclid || "n/a",
+      fbclid: raw.fbclid || "n/a",
+      page_url: raw.page_url || "unknown",
+      referrer: raw.referrer || "direct",
     };
 
     // Hard validation
@@ -93,10 +101,9 @@ export async function POST(req: Request) {
        1️⃣ ADMIN / INTERNAL EMAIL
     -------------------------------- */
     const adminEmail = new EmailParams()
-  .setFrom(sentFrom)
-  .setTo([new Recipient("entrysolutionllc@gmail.com", "Entry Solutions")])
-  .setCc([new Recipient("tesoromanagements@gmail.com", "Tesoro Management")])  
-   
+      .setFrom(sentFrom)
+      .setTo([new Recipient("entrysolutionllc@gmail.com", "Entry Solutions")])
+      .setCc([new Recipient("tesoromanagements@gmail.com", "Tesoro Management")])
       .setSubject(
         `${band} Lead (${score}/100) — ${data.projectType || "Unknown"} / ${data.service || "Unknown"}`
       )
@@ -113,20 +120,21 @@ export async function POST(req: Request) {
         <p><strong>Email:</strong> ${data.email}</p>
         <p><strong>Project Type:</strong> ${data.projectType || "—"}</p>
         <p><strong>Service:</strong> ${data.service || "—"}</p>
+        <p><strong>Urgency:</strong> ${data.urgency || "—"}</p>
 
         <hr />
 
         <h4>📊 Tracking</h4>
-        <p><strong>UTM Source:</strong> ${data.utm_source || "—"}</p>
-        <p><strong>UTM Medium:</strong> ${data.utm_medium || "—"}</p>
-        <p><strong>UTM Campaign:</strong> ${data.utm_campaign || "—"}</p>
-        <p><strong>UTM Term:</strong> ${data.utm_term || "—"}</p>
-        <p><strong>UTM Content:</strong> ${data.utm_content || "—"}</p>
-        <p><strong>GCLID:</strong> ${data.gclid || "—"}</p>
-        <p><strong>FBCLID:</strong> ${data.fbclid || "—"}</p>
+        <p><strong>UTM Source:</strong> ${data.utm_source}</p>
+        <p><strong>UTM Medium:</strong> ${data.utm_medium}</p>
+        <p><strong>UTM Campaign:</strong> ${data.utm_campaign}</p>
+        <p><strong>UTM Term:</strong> ${data.utm_term}</p>
+        <p><strong>UTM Content:</strong> ${data.utm_content}</p>
+        <p><strong>GCLID:</strong> ${data.gclid}</p>
+        <p><strong>FBCLID:</strong> ${data.fbclid}</p>
 
-        <p><strong>Page URL:</strong> ${data.page_url || "—"}</p>
-        <p><strong>Referrer:</strong> ${data.referrer || "—"}</p>
+        <p><strong>Page URL:</strong> ${data.page_url}</p>
+        <p><strong>Referrer:</strong> ${data.referrer}</p>
 
         <hr />
 
@@ -150,14 +158,7 @@ export async function POST(req: Request) {
         <p>A member of our team will contact you shortly to discuss pricing,
         availability, and next steps.</p>
 
-        <h4>What happens next?</h4>
-        <ul>
-          <li>📞 Quick phone call</li>
-          <li>📐 Measurements if needed</li>
-          <li>💰 Clear, upfront pricing</li>
-        </ul>
-
-        <p>If you need immediate assistance, call us at:</p>
+        <p><strong>Urgency:</strong> ${data.urgency || "Not specified"}</p>
 
         <p style="font-size:18px;"><strong>(267) 945-2247</strong></p>
 
@@ -166,9 +167,6 @@ export async function POST(req: Request) {
 
     await mailerSend.email.send(autoReply);
 
-    /* --------------------------------
-       ✅ RESPONSE
-    -------------------------------- */
     return NextResponse.json({
       success: true,
       score,
