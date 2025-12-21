@@ -174,7 +174,7 @@ md:mt-0
   <div className="space-y-4 animate-fade-in">
     <h3 className={`${questionClass} flex items-center gap-3`}>
       <img
-        src="/icons/project-house.svg"
+        src="/logo.png"
         alt=""
         aria-hidden="true"
         className="h-[26px] w-[26px] translate-y-[1px]"
