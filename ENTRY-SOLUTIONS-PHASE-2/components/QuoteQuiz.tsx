@@ -173,36 +173,41 @@ export default function QuoteQuiz() {
             What type of project is this?
           </h3>
 
-          {[
-            { label: "Residential" },
-            { label: "Commercial", emoji: "🏢" },
-            { label: "Custom", emoji: "✨" },
-          ].map((opt) => (
-            <button
-              key={opt.label}
-              className={optionButtonClass}
-              onClick={() => {
-                setForm((p) => ({ ...p, projectType: opt.label }));
-                next();
-              }}
-            >
-              <span className="text-xl flex items-center justify-center">
-                {opt.label === "Residential" ? (
-                  <img
-                    src="/icons/project-house.svg"
-                    alt=""
-                    aria-hidden
-                    className="h-[24px] w-[24px]"
-                  />
-                ) : (
-                  opt.emoji
-                )}
-              </span>
-              <span>{opt.label}</span>
-            </button>
-          ))}
-        </div>
+         {[
+  { label: "Residential" },
+  { label: "Commercial" },
+  { label: "Custom", emoji: "✨" },
+].map((opt) => (
+  <button
+    key={opt.label}
+    className={optionButtonClass}
+    onClick={() => {
+      setForm((p) => ({ ...p, projectType: opt.label }));
+      next();
+    }}
+  >
+    <span className="text-xl flex items-center justify-center">
+      {opt.label === "Residential" ? (
+        <img
+          src="/icons/project-house.svg"
+          alt=""
+          aria-hidden
+          className="h-[24px] w-[24px]"
+        />
+      ) : opt.label === "Commercial" ? (
+        <img
+          src="/icons/project-commercial.svg"
+          alt=""
+          aria-hidden
+          className="h-[24px] w-[24px]"
+        />
+      ) : (
+        opt.emoji
       )}
+    </span>
+    <span>{opt.label}</span>
+  </button>
+))}
 
       {/* STEP 2 */}
       {steps[step] === "Service" && (
