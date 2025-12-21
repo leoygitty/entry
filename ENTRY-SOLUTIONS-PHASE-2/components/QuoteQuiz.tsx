@@ -124,7 +124,13 @@ export default function QuoteQuiz() {
 
       if (!res.ok) throw new Error("Submission failed");
 
-      router.push("/thank-you");
+      router.push(
+        `/thank-you?projectType=${encodeURIComponent(
+          form.projectType
+        )}&service=${encodeURIComponent(
+          form.service
+        )}&urgency=${encodeURIComponent(form.urgency || "N/A")}`
+      );
     } catch (err) {
       console.error(err);
       alert("Something went wrong. Please try again.");
@@ -172,7 +178,7 @@ export default function QuoteQuiz() {
         Step {step + 1} of {steps.length} • Takes under 30 seconds ⏱️
       </p>
 
-      {/* PROGRESS BAR */}
+      {/* 🔴🔵 PROGRESS BAR */}
       <div className="mb-4">
         <div className="relative w-full bg-gray-200/60 rounded-full overflow-hidden">
           <div
@@ -184,8 +190,16 @@ export default function QuoteQuiz() {
 
       {/* STEP 1 */}
       {steps[step] === "Project" && (
-        <div className="space-y-4">
-          <h3 className={questionClass}>What type of project is this?</h3>
+        <div className="space-y-4 animate-fade-in">
+          <h3 className={`${questionClass} flex items-center gap-3`}>
+            <img
+              src="/logo.png"
+              alt=""
+              aria-hidden
+              className="h-[52px] w-[78px]"
+            />
+            What type of project is this?
+          </h3>
 
           {["Residential", "Commercial", "Custom"].map((label) => (
             <button
@@ -204,26 +218,30 @@ export default function QuoteQuiz() {
 
       {/* STEP 2 */}
       {steps[step] === "Service" && (
-        <div className="space-y-4">
+        <div className="space-y-4 animate-fade-in">
           <h3 className={questionClass}>🔧 What service do you need?</h3>
 
           {[
-            "Door Installation",
-            "Door Replacement",
-            "Custom Door Project",
-          ].map((label) => (
+            { label: "Door Installation" },
+            { label: "Door Replacement", emoji: "♻️" },
+            { label: "Custom Door Project", emoji: "🛠️" },
+          ].map((opt) => (
             <button
-              key={label}
+              key={opt.label}
               className={optionButtonClass}
               onClick={() => {
-                setForm((p) => ({ ...p, service: label }));
+                setForm((p) => ({ ...p, service: opt.label }));
                 next();
               }}
             >
-              {label === "Door Installation" ? (
-                <DoorIcon className="w-5 h-5" />
-              ) : null}
-              {label}
+              <span className="text-xl flex items-center justify-center">
+                {opt.label === "Door Installation" ? (
+                  <DoorIcon className="h-[22px] w-[22px] translate-y-[1px]" />
+                ) : (
+                  opt.emoji
+                )}
+              </span>
+              <span>{opt.label}</span>
             </button>
           ))}
 
@@ -235,7 +253,7 @@ export default function QuoteQuiz() {
 
       {/* STEP 3 */}
       {steps[step] === "Urgency" && (
-        <div className="space-y-4">
+        <div className="space-y-4 animate-fade-in">
           <h3 className={questionClass}>⏱️ How soon do you need this done?</h3>
 
           {[
@@ -264,7 +282,7 @@ export default function QuoteQuiz() {
 
       {/* STEP 4 */}
       {steps[step] === "Contact" && (
-        <div className="space-y-4">
+        <div className="space-y-4 animate-fade-in">
           <h3 className={questionClass}>📞 Where should we send your quote?</h3>
 
           {["name", "phone", "email"].map((field) => (
@@ -288,7 +306,7 @@ export default function QuoteQuiz() {
           <button
             disabled={submitting}
             onClick={submitLead}
-            className="w-full bg-gradient-to-r from-red-600 to-blue-700 text-white rounded-xl py-3 font-semibold"
+            className="w-full bg-gradient-to-r from-red-600 to-blue-700 text-white rounded-xl py-3 font-semibold text-lg"
           >
             {submitting ? "Sending..." : "Get My Free Quote"}
           </button>
