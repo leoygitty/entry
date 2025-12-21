@@ -120,6 +120,10 @@ export default function QuoteQuiz() {
   const questionClass =
     "text-[17px] font-semibold tracking-tight text-gray-900";
 
+  const progress = ((step + 1) / steps.length) * 100;
+  const barHeight =
+    step === 0 ? "h-2" : step === 1 ? "h-2.5" : step === 2 ? "h-3" : "h-3.5";
+
   return (
     <div
       ref={quizRef}
@@ -135,9 +139,25 @@ export default function QuoteQuiz() {
       <h2 className="text-[22px] font-semibold tracking-tight text-gray-900 mb-1">
         Get a Free Quote
       </h2>
-      <p className="text-sm text-gray-500 mb-4">
+      <p className="text-sm text-gray-500 mb-3">
         Step {step + 1} of {steps.length} • Takes under 30 seconds ⏱️
       </p>
+
+      {/* 🔴🔵 LIQUID PROGRESS BAR */}
+      <div className="mb-4">
+        <div className="relative w-full bg-gray-200/60 rounded-full overflow-hidden">
+          <div
+            className={`
+              ${barHeight}
+              bg-gradient-to-r from-red-600 to-blue-700
+              rounded-full
+              transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)]
+              blur-[0.2px]
+            `}
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
 
       {/* STEP 1 */}
       {steps[step] === "Project" && (
