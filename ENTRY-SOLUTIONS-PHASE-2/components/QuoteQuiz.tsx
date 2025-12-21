@@ -25,7 +25,7 @@ const getTrackingParams = () => {
 };
 
 /* -----------------------------------
-   Quiz Steps (dynamic)
+   Quiz Steps
 ----------------------------------- */
 const BASE_STEPS = ["Project", "Service", "Urgency", "Contact"];
 
@@ -51,20 +51,16 @@ export default function QuoteQuiz() {
     setForm((prev) => ({ ...prev, ...getTrackingParams() }));
   }, []);
 
-  /* -----------------------------------
-     HERO DIM + STICKY OBSERVER
-  ----------------------------------- */
   useEffect(() => {
     const hero = document.querySelector("[data-hero]");
     if (!quizRef.current || !hero) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        const visible = entry.isIntersecting;
-        hero.classList.toggle("brightness-75", visible);
+        hero.classList.toggle("brightness-75", entry.isIntersecting);
         hero.classList.toggle("transition-all", true);
         hero.classList.toggle("duration-500", true);
-        setIsSticky(!visible);
+        setIsSticky(!entry.isIntersecting);
       },
       { threshold: 0.15 }
     );
@@ -92,7 +88,6 @@ export default function QuoteQuiz() {
       });
 
       const result = await res.json();
-
       if (!res.ok) throw new Error(result?.error || "Submission failed");
 
       router.push(
@@ -110,9 +105,6 @@ export default function QuoteQuiz() {
     }
   };
 
-  /* -----------------------------------
-     Shared Button Style (iOS-like)
-  ----------------------------------- */
   const optionButtonClass = `
     w-full rounded-xl py-3
     flex items-center justify-center gap-2
@@ -135,20 +127,11 @@ export default function QuoteQuiz() {
         bg-white/90 backdrop-blur-md rounded-2xl p-6
         shadow-[0_12px_30px_rgba(0,0,0,0.12)]
         w-full max-w-md
-
-        /* Mobile positioning */
-        md:static
-relative md:relative
-mt-6 sm:mt-8
-md:mt-0
-
-        /* Desktop positioning */
+        relative mt-6 sm:mt-8
         md:static md:mt-0 md:ml-auto md:mr-0 md:translate-x-0
-
         ${isSticky ? "z-40" : ""}
       `}
     >
-      {/* HEADER */}
       <h2 className="text-[22px] font-semibold tracking-tight text-gray-900 mb-1">
         Get a Free Quote
       </h2>
@@ -156,60 +139,49 @@ md:mt-0
         Step {step + 1} of {steps.length} • Takes under 30 seconds ⏱️
       </p>
 
-      {/* PROGRESS BAR */}
-      <div className="mb-6">
-        <div className="relative h-3.5 bg-gray-200/70 rounded-full overflow-hidden">
-          <div
-            className="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-600 to-red-600 transition-all duration-700"
-            style={{ width: `${((step + 1) / steps.length) * 100}%` }}
-          />
+      {/* STEP 1 */}
+      {steps[step] === "Project" && (
+        <div className="space-y-4 animate-fade-in">
+          <h3 className={`${questionClass} flex items-center gap-3`}>
+            <img
+              src="/logo.png"
+              alt=""
+              aria-hidden
+              className="h-[52px] w-[78px]"
+            />
+            What type of project is this?
+          </h3>
+
+          {[
+            { label: "Residential" },
+            { label: "Commercial", emoji: "🏢" },
+            { label: "Custom", emoji: "✨" },
+          ].map((opt) => (
+            <button
+              key={opt.label}
+              className={optionButtonClass}
+              onClick={() => {
+                setForm((p) => ({ ...p, projectType: opt.label }));
+                next();
+              }}
+            >
+              <span className="text-xl flex items-center justify-center">
+                {opt.label === "Residential" ? (
+                  <img
+                    src="/icons/project-house.svg"
+                    alt=""
+                    aria-hidden
+                    className="h-[24px] w-[24px]"
+                  />
+                ) : (
+                  opt.emoji
+                )}
+              </span>
+              <span>{opt.label}</span>
+            </button>
+          ))}
         </div>
-        <p className="mt-2 text-xs text-gray-500 text-center">
-          Almost there — most people finish this 👍
-        </p>
-      </div>
-
-    {/* STEP 1 */}
-{steps[step] === "Project" && (
-  <div className="space-y-4 animate-fade-in">
-    <h3 className={`${questionClass} flex items-center gap-3`}>
-      <img
-        src="/logo.png"
-        alt=""
-        aria-hidden="true"
-        className="h-[52px] w-[78px] translate-y-[1px]"
-      />
-      What type of project is this?
-    </h3>
-
-         {[
-  { label: "Residential", type: "svg" },
-  { label: "Commercial", emoji: "🏢" },
-  { label: "Custom", emoji: "✨" },
-].map((opt) => (
-  <button
-    key={opt.label}
-    className={optionButtonClass}
-    onClick={() => {
-      setForm((p) => ({ ...p, projectType: opt.label }));
-      next();
-    }}
-  >
-    <span className="text-xl flex items-center justify-center">
-      {opt.label === "Residential" ? (
-        <img
-          src="/icons/project-house.svg"
-          alt=""
-          aria-hidden="true"
-          className="h-[24px] w-[24px]"
-        />
-      ) : (
-        opt.emoji
       )}
-    </span>
-    <span>{opt.label}</span>
-  </button>
-))}
 
       {/* STEP 2 */}
       {steps[step] === "Service" && (
@@ -274,12 +246,6 @@ md:mt-0
         <div className="space-y-4 animate-fade-in">
           <h3 className={questionClass}>📞 Where should we send your quote?</h3>
 
-          <p className="text-sm text-gray-600">
-            {form.urgency === "ASAP"
-              ? "We’ll call you within minutes."
-              : "We’ll reach out shortly with next steps."}
-          </p>
-
           {["name", "phone", "email"].map((field) => (
             <input
               key={field}
@@ -294,21 +260,17 @@ md:mt-0
               onChange={(e) =>
                 setForm((p) => ({ ...p, [field]: e.target.value }))
               }
-              className="w-full rounded-xl border border-gray-200 p-3 text-gray-900 focus:ring-2 focus:ring-primary"
+              className="w-full rounded-xl border border-gray-200 p-3"
             />
           ))}
 
           <button
             disabled={submitting}
             onClick={submitLead}
-            className="w-full bg-gradient-to-r from-red-600 to-blue-700 text-white rounded-xl py-3 font-semibold text-lg hover:opacity-90 disabled:opacity-50 transition"
+            className="w-full bg-gradient-to-r from-red-600 to-blue-700 text-white rounded-xl py-3 font-semibold text-lg"
           >
-            🚀 {submitting ? "Sending..." : "Get My Free Quote"}
+            {submitting ? "Sending..." : "Get My Free Quote"}
           </button>
-
-          <p className="text-xs text-gray-500 text-center">
-            ✔ No spam • ✔ No pressure • ✔ Fast response
-          </p>
 
           <button onClick={back} className="text-sm text-gray-400">
             ← Back
