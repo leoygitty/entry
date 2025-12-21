@@ -182,25 +182,34 @@ md:mt-0
       What type of project is this?
     </h3>
 
-          {[
-            { label: "Residential", emoji: "🏡" },
-            { label: "Commercial", emoji: "🏢" },
-            { label: "Custom", emoji: "✨" },
-          ].map((opt) => (
-            <button
-              key={opt.label}
-              className={optionButtonClass}
-              onClick={() => {
-                setForm((p) => ({ ...p, projectType: opt.label }));
-                next();
-              }}
-            >
-              <span className="text-xl">{opt.emoji}</span>
-              {opt.label}
-            </button>
-          ))}
-        </div>
+         {[
+  { label: "Residential", icon: "house" },
+  { label: "Commercial", emoji: "🏢" },
+  { label: "Custom", emoji: "✨" },
+].map((opt) => (
+  <button
+    key={opt.label}
+    className={optionButtonClass}
+    onClick={() => {
+      setForm((p) => ({ ...p, projectType: opt.label }));
+      next();
+    }}
+  >
+    <span className="text-xl flex items-center justify-center">
+      {opt.label === "Residential" ? (
+        <img
+          src="/icons/project-house.svg"
+          alt=""
+          aria-hidden="true"
+          className="h-[24px] w-[24px]"
+        />
+      ) : (
+        opt.emoji
       )}
+    </span>
+    {opt.label}
+  </button>
+))}
 
       {/* STEP 2 */}
       {steps[step] === "Service" && (
