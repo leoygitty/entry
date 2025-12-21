@@ -12,9 +12,9 @@ const getTrackingParams = () => {
 
   const params = new URLSearchParams(window.location.search);
 
-   // DEBUG: no orphan ternaries below
-  
-   return {
+  // DEBUG: no orphan ternaries below
+
+  return {
     utm_source: params.get("utm_source"),
     utm_medium: params.get("utm_medium"),
     utm_campaign: params.get("utm_campaign"),
@@ -176,45 +176,47 @@ export default function QuoteQuiz() {
           </h3>
 
           {[
-  { label: "Residential" },
-  { label: "Commercial" },
-  { label: "Custom" },
-].map((opt) => (
-  <button
-    key={opt.label}
-    className={optionButtonClass}
-    onClick={() => {
-      setForm((p) => ({ ...p, projectType: opt.label }));
-      next();
-    }}
-  >
-    <span className="text-xl flex items-center justify-center">
-      {opt.label === "Residential" ? (
-        <img
-          src="/icons/project-house.svg"
-          alt=""
-          aria-hidden
-          className="h-[24px] w-[24px]"
-        />
-      ) : opt.label === "Commercial" ? (
-        <img
-          src="/icons/project-commercial.svg"
-          alt=""
-          aria-hidden
-          className="h-[24px] w-[24px]"
-        />
-      ) : (
-        <img
-          src="/icons/project-custom.svg"
-          alt=""
-          aria-hidden
-          className="h-[24px] w-[24px]"
-        />
+            { label: "Residential" },
+            { label: "Commercial" },
+            { label: "Custom" },
+          ].map((opt) => (
+            <button
+              key={opt.label}
+              className={optionButtonClass}
+              onClick={() => {
+                setForm((p) => ({ ...p, projectType: opt.label }));
+                next();
+              }}
+            >
+              <span className="text-xl flex items-center justify-center">
+                {opt.label === "Residential" ? (
+                  <img
+                    src="/icons/project-house.svg"
+                    alt=""
+                    aria-hidden
+                    className="h-[24px] w-[24px]"
+                  />
+                ) : opt.label === "Commercial" ? (
+                  <img
+                    src="/icons/project-commercial.svg"
+                    alt=""
+                    aria-hidden
+                    className="h-[24px] w-[24px]"
+                  />
+                ) : (
+                  <img
+                    src="/icons/project-custom.svg"
+                    alt=""
+                    aria-hidden
+                    className="h-[24px] w-[24px]"
+                  />
+                )}
+              </span>
+              <span>{opt.label}</span>
+            </button>
+          ))}
+        </div>
       )}
-    </span>
-    <span>{opt.label}</span>
-  </button>
-))}
 
       {/* STEP 2 */}
       {steps[step] === "Service" && (
