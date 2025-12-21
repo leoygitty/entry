@@ -1,6 +1,9 @@
 "use client";
 
 import QuoteQuiz from "@/components/QuoteQuiz";
+import { DoorIcon } from "@/components/icons/DoorIcon";
+import { ShieldFitIcon } from "@/components/icons/ShieldFitIcon";
+import { InstallationIcon } from "@/components/icons/InstallationIcon";
 
 export default function Hero() {
   return (
@@ -58,15 +61,15 @@ export default function Hero() {
           {/* Bullet points */}
           <ul className="space-y-2 text-white/90 text-sm sm:text-base">
             <li className="flex items-start gap-2">
-              <span className="text-white">✔</span>
+              <DoorIcon className="w-[18px] h-[18px] text-white mt-[2px] shrink-0 drop-shadow-sm" />
               <span>Exterior & Interior Doors</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-white">✔</span>
+              <ShieldFitIcon className="w-[18px] h-[18px] text-white mt-[2px] shrink-0 drop-shadow-sm" />
               <span>Security & Custom Fit Options</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-white">✔</span>
+              <InstallationIcon className="w-[18px] h-[18px] text-white mt-[2px] shrink-0 drop-shadow-sm" />
               <span>Clean, Professional Installation</span>
             </li>
           </ul>
