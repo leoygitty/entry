@@ -17,19 +17,8 @@ export default function RootLayout({
         {/* CallRail Dynamic Number Insertion */}
         <Script
           id="callrail"
+          src="//cdn.callrail.com/companies/554986649/e2933efaed1eccbd3c90/12/swap.js"
           strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                var cr = document.createElement("script");
-                cr.type = "text/javascript";
-                cr.async = true;
-                cr.src = "//cdn.callrail.com/companies/554986649/e2933efaed1eccbd3c90/12/swap.js";
-                var s = document.getElementsByTagName("script")[0];
-                s.parentNode.insertBefore(cr, s);
-              })();
-            `,
-          }}
         />
       </head>
 
