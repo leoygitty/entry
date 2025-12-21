@@ -177,7 +177,7 @@ md:mt-0
         src="/logo.png"
         alt=""
         aria-hidden="true"
-        className="h-[52px] w-[52px] translate-y-[1px]"
+        className="h-[52px] w-[78px] translate-y-[1px]"
       />
       What type of project is this?
     </h3>
