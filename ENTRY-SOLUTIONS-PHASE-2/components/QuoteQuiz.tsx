@@ -210,31 +210,26 @@ export default function QuoteQuiz() {
           <h3 className={questionClass}>🔧 What service do you need?</h3>
 
           {[
-  { label: "Door Installation" },
-  { label: "Door Replacement", emoji: "♻️" },
-  { label: "Custom Door Project", emoji: "🛠️" },
-].map((opt) => (
-  <button
-    key={opt.label}
-    className={optionButtonClass}
-    onClick={() => {
-      setForm((p) => ({ ...p, service: opt.label }));
-      next();
-    }}
-  >
-    <span className="text-xl flex items-center justify-center">
-      {opt.label === "Door Installation" ? (
-        <DoorIcon className="h-[22px] w-[22px] translate-y-[1px]" />
-      ) : (
-        opt.emoji
-      )}
-    </span>
-    <span>{opt.label}</span>
-  </button>
-))}
+            { label: "Door Installation" },
+            { label: "Door Replacement", emoji: "♻️" },
+            { label: "Custom Door Project", emoji: "🛠️" },
+          ].map((opt) => (
+            <button
+              key={opt.label}
+              className={optionButtonClass}
+              onClick={() => {
+                setForm((p) => ({ ...p, service: opt.label }));
+                next();
+              }}
             >
-              <span className="text-xl">{opt.emoji}</span>
-              {opt.label}
+              <span className="text-xl flex items-center justify-center">
+                {opt.label === "Door Installation" ? (
+                  <DoorIcon className="h-[22px] w-[22px] translate-y-[1px]" />
+                ) : (
+                  opt.emoji
+                )}
+              </span>
+              <span>{opt.label}</span>
             </button>
           ))}
 
