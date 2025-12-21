@@ -1,6 +1,7 @@
 "use client";
 
 import QuoteQuiz from "@/components/QuoteQuiz";
+import EfficiencyInsightCard from "@/components/EfficiencyInsightCard";
 import { DoorIcon } from "@/components/icons/DoorIcon";
 import { ShieldFitIcon } from "@/components/icons/ShieldFitIcon";
 import { InstallationIcon } from "@/components/icons/InstallationIcon";
@@ -10,6 +11,7 @@ export default function Hero() {
     <section
       className="relative text-white overflow-hidden bg-cover bg-center"
       style={{ backgroundImage: "url('/images/hero-job.jpg')" }}
+      data-hero
     >
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/60" />
@@ -75,10 +77,15 @@ export default function Hero() {
           </ul>
         </div>
 
-        {/* QUIZ — below copy on mobile, unchanged on desktop */}
+        {/* QUIZ */}
         <div className="animate-fade-in [animation-delay:80ms] mt-6 lg:mt-0">
           <QuoteQuiz />
         </div>
+      </div>
+
+      {/* INSIGHT CARD — BELOW QUIZ (highest trust, no clutter) */}
+      <div className="relative z-10 pb-12 md:pb-20">
+        <EfficiencyInsightCard />
       </div>
     </section>
   );
